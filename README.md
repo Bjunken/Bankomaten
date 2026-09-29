@@ -19,26 +19,27 @@ Saldon sparas mellan körningar i en JSON-fil, så att de inte återställs när
 
 ```
 BankApp/
-|-- Program.cs
+|-- Program.cs                    <- Startar programmet och skapar/laddar in Json filen.
 |
 |-- Models/
-|   |-- User.cs
-|   `-- Account.cs
+|   |-- User.cs                   <- List klass för att skapa konton.
+|   `-- Account.cs                <- Klass biboltek med alla metoder som har med användar konton att göra.
 |
 |-- Service/
-|   |-- BankService.cs
-|   |-- AccountService.cs
-|   `-- ValidationHelper.cs
+|   |-- BankService.cs            <- Alla metoder som tillhör själva bankomaten.
+|   |-- AccountService.cs         <- Alla metoder som hanterar bank konto information.
+|   `-- ValidationHelper.cs       <- Alla metoder som validerar inputs.
 |
 |-- UI/
-|   |-- LoginMenu.cs
-|   `-- MainMenu.cs
+|   |-- LoginMenu.cs              <- Frontend för login menyn.
+|   `-- MainMenu.cs               <- Frontend för huvudmenyn.
 |
-|-- Resources/
-|   `-- ErrorMessage.cs
+|-- Utilitize/
+|  |-- ErrorMessage.cs            <- Alla metoder som printar ut fel meddelanden.
+|  '-- DataHandling.cs            <- Metoder för att Spara och ladda information från Json filen.
 |
 |-- Data/
-|   `-- accounts.json
+|   `-- accounts.json             <- Lokala databasen.
 |
 `-- README.md
 ```
