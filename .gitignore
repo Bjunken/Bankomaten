@@ -2,6 +2,7 @@ bin/
 obj/
 .vs/
 .idea/
+.Program.cs
 *.user
 *.suo
 *.userosscache
