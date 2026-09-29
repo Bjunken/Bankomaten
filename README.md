@@ -22,19 +22,19 @@ BankApp/
 |-- Program.cs                    <- Startar programmet och skapar/laddar in Json filen.
 |
 |-- Models/
-|   |-- User.cs                   <- List klass för att skapa konton.
-|   `-- Account.cs                <- Klass biboltek med alla metoder som har med användar konton att göra.
+|   |-- User.cs                   <- klass för en användare: username, pin och en List<Account>.
+|   `-- Account.cs                <- Hanterar bara datan för kontona, (saldo, namn, ect. Exempelvis med TryWithdraw/Deposit.
 |
 |-- Service/
-|   |-- BankService.cs            <- Alla metoder som tillhör själva bankomaten.
-|   |-- AccountService.cs         <- Alla metoder som hanterar bank konto information.
-|   `-- ValidationHelper.cs       <- Alla metoder som validerar inputs.
+|   |-- BankService.cs            <- Login logiken, tar mot username och pin, å hittar rätt user, samt räknar felförsök, (felförsök kommer behöva va sin egna metod så vi kan använda den igen).
+|   |-- AccountService.cs         <- Hanterar rätt konto, ser alltså till att använda kontot's egna metoder.
+|   `-- ValidationHelper.cs       <- Alla metoder som validerar inputs innan dem ska nå Models/Service.
 |
 |-- UI/
 |   |-- LoginMenu.cs              <- Frontend för login menyn.
 |   `-- MainMenu.cs               <- Frontend för huvudmenyn.
 |
-|-- Utilitize/
+|-- Utils/
 |  |-- ErrorMessage.cs            <- Alla metoder som printar ut fel meddelanden.
 |  '-- DataHandling.cs            <- Metoder för att Spara och ladda information från Json filen.
 |
