@@ -1,4 +1,5 @@
 ﻿using Bankomaten.Models;
+using Bankomaten.Service;
 using Bankomaten.UI;
 
 namespace Bankomaten
@@ -20,7 +21,13 @@ namespace Bankomaten
             
             if (loggedInUser == null)
             {
-                Console.WriteLine("Too many failed login attempts.");
+                Console.WriteLine("Unknown user.");
+                return;
+            }
+
+            if (!ValidationHelper.VerifyPin(loggedInUser))
+            {
+                Console.WriteLine("To many failed login attempts.");
                 return;
             }
             Console.WriteLine($"Welcome lovely {loggedInUser.UserName}");

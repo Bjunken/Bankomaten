@@ -17,34 +17,18 @@ namespace Bankomaten.Models
 
         public static User Login(User[] users)
         {
-            int attempts = 0;
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
 
-            while (attempts < 3)
+            foreach (User user in users)
             {
-                Console.Write("Username: ");
-                string username = Console.ReadLine();
-                Console.Write("Enter code: ");
-                int pin;
-
-                if (!int.TryParse(Console.ReadLine(), out pin))
+                if (user.UserName == username)
                 {
-                    Console.WriteLine("Wrong code entered.");
-                    attempts++;
-                    continue;
-                }                
-
-                foreach (User user in users)
-                {
-                    if (user.UserName == username && user.PinCode == pin)
-                    {
-                        return user;
-                    }
+                    return user;
                 }
-                attempts++;
-                Console.WriteLine($"Wrong User or code. Tries left: {3 - attempts}");
             }
-            return null;
 
+            return null;
         }
 
 
