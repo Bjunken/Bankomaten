@@ -1,4 +1,5 @@
 ﻿using Bankomaten.Models;
+using Bankomaten.UI;
 
 namespace Bankomaten
 {
@@ -14,6 +15,16 @@ namespace Bankomaten
                 new User("Martin", 4444),
                 new User("Admin", 5555)
             };
+            Console.WriteLine("Welcome to SyntaxSquad Bank");
+            User loggedInUser = User.Login (users);
+            
+            if (loggedInUser == null)
+            {
+                Console.WriteLine("Too many failed login attempts.");
+                return;
+            }
+            Console.WriteLine($"Welcome lovely {loggedInUser.UserName}");
+
         }
     }
 }
