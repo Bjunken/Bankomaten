@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bankomaten.Models {
-    internal class User {
+namespace Bankomaten.Models 
+{
+    internal class User 
+    {
 
     }
 }
