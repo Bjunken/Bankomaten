@@ -108,6 +108,37 @@ Block B - Models + Validering | Eftersom dem hänger ihop med nästan allt grupp
 Block C - Service logik | Eftersom detta kan bli rätt mycket så tänkte jag att det bara två filer, för blir lätt för mycket annars.
 Block D - UI + Json | All frontend av en person blir lättare än om all ska hålla på med frontend, sen la jag även till DataHandling, alltså Json för att inte överbelasta block C.
 
+#### Checklista För Varje Block.
+Block B
+Kristin CHECKLIST:
+
+ User.cs
+ [ ] User contains the required user information.
+ [ ] Accounts uses the group's chosen List data structure.
+ [ ] Users can have different numbers of accounts.
+ [ ] Login/user lookup returns a User that other classes can use.
+
+ Account.cs
+ [ ] Account contains account name and decimal balance.
+ [ ] Balance cannot be freely changed without following bank rules.
+ [ ] Account supports the structure needed by AccountService.
+
+ ValidationHelper.cs
+ [ ] PIN validation has a maximum number of attempts.
+ [ ] Invalid PIN input counts as an attempt.
+ [ ] Method returns a result that Service/UI can use.
+ [ ] No unnecessary UI/login-flow logic is added here.
+
+ Before handing over to Person C/D:
+ [ ] Build succeeds.
+ [ ] Classes and property names are agreed upon.
+ [ ] Constructor signatures are stable.
+ [ ] Person C and D know what methods/properties they can use.
+
+ Block C
+ 
+ Block D
+ 
 ## Reflektion
 
 ### Motivering av lösningen
