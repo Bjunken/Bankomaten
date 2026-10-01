@@ -36,7 +36,7 @@ namespace Bankomaten.Models  {
         public static User Login(User[] users)
         {
             Console.Write("Username: ");
-            string username = Console.ReadLine();
+            string username = Console.ReadLine(); William i UI
 
             foreach (User user in users)
             {

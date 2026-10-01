@@ -5,7 +5,7 @@ using System.Text;
 namespace Bankomaten.Models  {
     /*
         Reminder: This class defines the Account model used by Service,
-        keep account data her and make sure balance changes can be controlled from here.
+        keep account data here and make sure balance changes can be controlled from here.
     */
     public class Account  {
         public string AccountName { get; set; }
