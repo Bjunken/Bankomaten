@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bankomaten.Service;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,11 +9,13 @@ namespace Bankomaten.Models
     {
         public string UserName { get; set; }
         public int PinCode { get; set; }
+        public Account[] Accounts { get; set; } 
 
-        public User(string userName, int pinCode)
+        public User(string userName, int pinCode, Account[] accounts)
         {
             UserName = userName;
             PinCode = pinCode;
+            Accounts = accounts;
         }
 
         public static User Login(User[] users)

@@ -10,11 +10,28 @@ namespace Bankomaten
         {
             User[] users =
             {
-                new User("Linus", 1111),
-                new User("Kristin", 2222),
-                new User("William", 3333),
-                new User("Martin", 4444),
-                new User("Admin", 5555)
+                new User("Linus", 1111, new Account []
+                {
+                    new Account("Salaryaccount", 12500.50m),
+                    new Account("Savingsaccount", 5000.75m)
+                }),
+                new User("Kristin", 2222, new Account []
+                {
+                    new Account("Salaryaccount", 1500.50m),
+                    new Account("Savingsaccount", 4586.75m),
+                    new Account("Vacationaccount", 8563.75m)
+                }),
+                new User("William", 3333, new Account[] 
+                {   new Account("Salaryaccount", 12547.50m), 
+                    new Account("Savingsaccount", 5001.75m)
+                }),
+                new User("Martin", 4444, new Account[] 
+                {   new Account("Salaryaccount", 4598.50m), 
+                    new Account("Savingsaccount", 50.75m) 
+                }),
+                new User("Admin", 5555, new Account[] 
+                {   new Account("Salaryaccount", 8963.50m),                      
+                })
             };
             Console.WriteLine("Welcome to SyntaxSquad Bank");
             User loggedInUser = User.Login (users);
@@ -31,6 +48,7 @@ namespace Bankomaten
                 return;
             }
             Console.WriteLine($"Welcome lovely {loggedInUser.UserName}");
+            Account.ShowAccounts(loggedInUser);
 
         }
     }
