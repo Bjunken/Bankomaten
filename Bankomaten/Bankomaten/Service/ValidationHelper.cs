@@ -4,8 +4,29 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Bankomaten.Service {
+    
+    /*
+        Reminder: This class handles validation needed by the UI flow,
+        it should only RETURN useful results to the classes using it instead
+        of handling the complete UI flow.
+    */
+    
     internal class ValidationHelper 
     {
+
+        /*
+            The method "VerifyPin" needs to change a little bit.
+            Remember that UI-logic should only be handled in the UI methods, while this
+            method should only validate the PIN and then another UI method will call it and display
+            the result / error message.
+
+            Sidenote:
+
+            Make sure invalid inputs also counts as an attempt,
+            and this method should not handle the rest of the login flow.
+        */
+
+        // Validates the PIN
         public static bool VerifyPin(User user)
         {
             return VerifyPin(user, 3);
