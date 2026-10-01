@@ -49,6 +49,7 @@ BankApp/
 ## Datastrukturer
 
 - `List` för kontoinformation
+- `` Inte besämt andra datastrukturen än.
 
 ### Motivering
 
@@ -86,13 +87,58 @@ Saldon sparas mellan körningar till en JSON-fil, så att de inte återställs. 
 ### Gruppmedlemmar
 
 - Linus, projektledare
+- Kristin, Kodare
+- Martin, Kodare
+- William, Kodare
 
 ### Roller
 
-- **Linus:** projektledare och ansvarig för repot. Fördelar uppgifterna, övervakar så att arbetet sker parallellt och äger README.
+- **Linus:** projektledare och ansvarig för repot och kommunikation, samt hjälp och stöd vid behov. Fördelar även uppgifterna, och ansvarar för Program.cs / ErrorMessages.cs.
+- **Kristin:** hantear block B, vilket är Models + Validering. (User.cs / Account.cs / ValidationHelper.cs).
+- **Martin:** Ansvarar för block C, vilket service logik, (BankService.cs och AccountService.cs).
+- **William:** Har hand om block D, som här UI + Json, (LgoinMenu.cs / MainMenu.cs / DataHandling.cs).
 
 ### Fördelning av uppgifter
 
+Jag, (Linus), fick i uppgift att fördela projektet i gruppen som projektledare, och kom med förslaget att dela upp det i olika block för att så smidigt som möjligt hantera GitHub som nybörjare och även ha koll på respektives arbete på ett lättare sätt. Jag la upp förslaget och sedan fick medlemmar välja själva vilken del dem vill göra.
+
+Detta var min planering:
+Block A - Progam.cs / HerrorMessages / GitHub / README / testning vid merge / kommunikation
+Block B - Models + Validering | Eftersom dem hänger ihop med nästan allt grupperade jag dem tillsammans.
+Block C - Service logik | Eftersom detta kan bli rätt mycket så tänkte jag att det bara två filer, för blir lätt för mycket annars.
+Block D - UI + Json | All frontend av en person blir lättare än om all ska hålla på med frontend, sen la jag även till DataHandling, alltså Json för att inte överbelasta block C.
+
+#### Checklista För Varje Block.
+Block B
+Kristin CHECKLIST:
+
+ User.cs
+ [ ] User contains the required user information.
+ [ ] Accounts uses the group's chosen List data structure.
+ [ ] Users can have different numbers of accounts.
+ [ ] Login/user lookup returns a User that other classes can use.
+
+ Account.cs
+ [ ] Account contains account name and decimal balance.
+ [ ] Balance cannot be freely changed without following bank rules.
+ [ ] Account supports the structure needed by AccountService.
+
+ ValidationHelper.cs
+ [ ] PIN validation has a maximum number of attempts.
+ [ ] Invalid PIN input counts as an attempt.
+ [ ] Method returns a result that Service/UI can use.
+ [ ] No unnecessary UI/login-flow logic is added here.
+
+ Before handing over to Person C/D:
+ [ ] Build succeeds.
+ [ ] Classes and property names are agreed upon.
+ [ ] Constructor signatures are stable.
+ [ ] Person C and D know what methods/properties they can use.
+
+ Block C
+ 
+ Block D
+ 
 ## Reflektion
 
 ### Motivering av lösningen
