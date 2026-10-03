@@ -2,7 +2,11 @@ bin/
 obj/
 .vs/
 .idea/
+.Models/
 .Program.cs
+.Account.cs
+.User.cs
+.ValidationHelper.cs
 *.user
 *.suo
 *.userosscache
