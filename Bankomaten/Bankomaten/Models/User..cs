@@ -24,6 +24,7 @@ namespace Bankomaten.Models  {
         // We need a third public field which is a bool, it only needs a "larger" 'get;' that returns true and false based on if-checks.
         // After the field is done, you only need to write one method that accepts user and an int in it's parameter, then check if-locked
         // then check if-guess was true or not, then ++ attempts and return true or false, (hint: if PinTries >= 3, LockedAt = DateTime.Now;)
+        // You'll also need two methods for ++ PinTries and to set LockedAt, and one method for resetting Pintries.
         
         // Login method to find a user by username from a list of users.      
         public static User Login(List<User> users, string username)
