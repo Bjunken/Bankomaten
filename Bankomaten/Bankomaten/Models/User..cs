@@ -11,30 +11,51 @@ namespace Bankomaten.Models  {
         (aka no write/readLines)
     */
     public class User  {
-        public string UserName { get; set; }
-        public int PinCode { get; set; }
-        public List<Account> Accounts { get; set; }
+        public string UserName { get; }
+        private int PinCode { get; }
+        public List<Account> Accounts { get; }
+        private int PinTries;
+        private DateTime? LockedAt;
+
+        public bool IsLocked
+        {
+            get
+            {
+                if (LockedAt == null)
+                    return false;
+                return (DateTime.Now - LockedAt.Value).TotalSeconds < 30;
+            }
+        }
         public User(string userName, int pinCode, List<Account> accounts)
         {
             UserName = userName;
             PinCode = pinCode;
             Accounts = accounts;
         }
-        // Login method to find a user by username from a list of users.      
-        public static User Login(List<User> users, string username)
+        public bool CheckPin(int enteredPin)
         {
-            Console.Write("Username: ");
-          
-            foreach (User user in users)
+            if (IsLocked)
+            
+                return false;
+            
+            if (enteredPin == PinCode)
             {
-                if (user.UserName == username)
-                {
-                    return user;
-                }
-            }
-
-            return null;
+                ResetPinTries(); // Reset tries on successful login
+                return true;
+            }            
+            
+                PinTries++;
+                if (PinTries >= 3)
+                
+                    LockedAt = DateTime.Now;                    
+                
+                return false;            
         }
+        private void ResetPinTries()
+        {
+            PinTries = 0;
+            LockedAt = null;
+        }              
 
 
     }

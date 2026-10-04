@@ -11,40 +11,12 @@ namespace Bankomaten.Service {
         of handling the complete UI flow.
     */
     
-    internal class ValidationHelper 
+    public static class ValidationHelper 
     {
-
-        // Validates the PIN
-        public static bool VerifyPin(User user)
+        public static bool VerifyPin (User user, int enteredPin)
         {
-            return VerifyPin(user, 3);
-        }
-
-        public static bool VerifyPin(User user, int maxAttempts)
-        {
-            int attempts = 0;
-
-            while (attempts < maxAttempts)
-            {
-                Console.Write("Enter code: ");
-
-                if (!int.TryParse(Console.ReadLine(), out int enteredPin))
-                {
-                    attempts++;
-                    continue;
-                }
-
-                if (enteredPin == user.PinCode)
-                {
-                    return true;
-                }
-
-                attempts++;
-                //Console.WriteLine($"Wrong code. Tries left: {maxAttempts - attempts}"); -William
-            }
-
-            return false;
-        }
+            return user.CheckPin(enteredPin);
+        }     
 
 
     }

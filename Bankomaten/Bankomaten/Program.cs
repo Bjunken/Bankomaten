@@ -1,6 +1,8 @@
 ﻿using Bankomaten.Models;
 using Bankomaten.Service;
 using Bankomaten.UI;
+using System.Reflection.Metadata;
+using static Bankomaten.Models.Account;
 
 namespace Bankomaten
 {
@@ -8,50 +10,58 @@ namespace Bankomaten
     {
         static void Main(string[] args) 
         {
-            List<User> users = new List<User>
-            {
-                new User("Linus", 1111, new List<Account>
-                {
-                    new Account("Salaryaccount", 12500.50m),
-                    new Account("Savingsaccount", 5000.75m)
-                }),
-                new User("Kristin", 2222, new List<Account>
-                {
-                    new Account("Salaryaccount", 1500.50m),
-                    new Account("Savingsaccount", 4586.75m),
-                    new Account("Vacationaccount", 8563.75m)
-                }),
-                new User("William", 3333, new List<Account>
-                {   new Account("Salaryaccount", 12547.50m), 
-                    new Account("Savingsaccount", 5001.75m)
-                }),
-                new User("Martin", 4444, new List<Account>
-                {   new Account("Salaryaccount", 4598.50m), 
-                    new Account("Savingsaccount", 50.75m) 
-                }),
-                new User("Admin", 5555, new List<Account>
-                {   new Account("Salaryaccount", 8963.50m),                      
-                })
-            };
-            Console.WriteLine("Welcome to SyntaxSquad Bank");
+            //Creates a list of users with their usernames, PINs, and accounts
+            List<User> users = new List<User>();
 
-            // below is to be added to the UI-Class. I put it here to make it work for now. -Kristin
+            users.Add(new User("Linus", 1111, AccountFactory.GenerateAccounts()));
+            users.Add(new User("Kristin", 2222, AccountFactory.GenerateAccounts()));
+            users.Add(new User("William", 3333, AccountFactory.GenerateAccounts()));
+            users.Add(new User("Martin", 4444, AccountFactory.GenerateAccounts()));
+            users.Add(new User("Anas", 5555, AccountFactory.GenerateAccounts()));
+            //Login process
+            Console.Write("Username: ");
             string username = Console.ReadLine();
-            User loggedInUser = User.Login(users, username);
 
+            User loggedInUser = users.Find(u => u.UserName == username);
             if (loggedInUser == null)
             {
                 Console.WriteLine("Unknown user.");
                 return;
             }
-
-            if (!ValidationHelper.VerifyPin(loggedInUser))
+            //Pin-validation
+            while (true)
             {
-                Console.WriteLine("To many failed login attempts.");
-                return;
+                if (loggedInUser.IsLocked)
+                {
+                    Console.WriteLine("Your account is locked. Please try again later.");
+                    return;
+                }
+                Console.Write("Enter PIN: ");
+                if(!int.TryParse(Console.ReadLine(), out int enteredPin))
+                {
+                    Console.WriteLine("Invalid PIN format. Please enter a numeric PIN.");
+                    continue;
+                }
+                bool isValid = ValidationHelper.VerifyPin(loggedInUser, enteredPin);
+                
+                if (!isValid)
+                {
+                    Console.WriteLine("Invalid PIN. Please try again.");
+                    continue;
+                }
+                break;
+
             }
+            //Logged in successfully        
             Console.WriteLine($"Welcome lovely {loggedInUser.UserName}");
             AccountService.ShowAccounts(loggedInUser);
+
+
+
+
+
+
+
 
         }
     }
