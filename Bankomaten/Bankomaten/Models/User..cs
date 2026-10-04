@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Bankomaten.Models  {
-
     /*
         Reminder: This class defines the user model USED by Service and UI,
         keep this class focused on user data and the methods required to access it.
