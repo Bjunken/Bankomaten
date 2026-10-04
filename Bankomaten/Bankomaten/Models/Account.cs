@@ -28,9 +28,10 @@ namespace Bankomaten.Models  {
         }
         public bool Withdraw(decimal amount)
         {
-            if (amount <= 0 )
-             return false; 
-            
+            if (amount <= 0 || Balance < amount)
+            {
+                return false;
+            }
             Balance += amount;
             return true;
         }
@@ -58,7 +59,7 @@ namespace Bankomaten.Models  {
                 for (int i = 0; i < numberOfAccounts; i++)
                 {
                     string name = AccountNames[i];
-                    decimal balance = random.Next(100, 10000); // Random balance between 100 and 10,000
+                    decimal balance = random.Next(100, 10000); // Random balance between 100 and 10 000
                     accounts.Add(new Account(name, balance));
                 }
                 return accounts;

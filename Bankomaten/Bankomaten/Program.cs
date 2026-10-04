@@ -19,22 +19,24 @@ namespace Bankomaten
             users.Add(new User("Martin", 4444, AccountFactory.GenerateAccounts()));
             users.Add(new User("Anas", 5555, AccountFactory.GenerateAccounts()));
             //Login process
-            Console.Write("Username: ");
+            User loggedInUser = null;
+            while (true)
+            {
+                Console.Write("Username: ");
             string username = Console.ReadLine();
 
-            User loggedInUser = users.Find(u => u.UserName == username);
+            loggedInUser = users.Find(u => u.UserName == username);
             if (loggedInUser == null)
             {
                 Console.WriteLine("Unknown user.");
-                return;
-            }
+                continue; //returns to the beginning of the loop to ask for username again.
+                }
             //Pin-validation
-            while (true)
-            {
+            
                 if (loggedInUser.IsLocked)
                 {
                     Console.WriteLine("Your account is locked. Please try again later.");
-                    return;
+                    continue; //returns to the beginning of the loop to ask for username again.
                 }
                 Console.Write("Enter PIN: ");
                 if(!int.TryParse(Console.ReadLine(), out int enteredPin))
@@ -46,16 +48,15 @@ namespace Bankomaten
                 
                 if (!isValid)
                 {
-                    Console.WriteLine("Invalid PIN. Please try again.");
                     continue;
                 }
-                break;
+                break; // Exit the loop after successful login and account display                          
+
 
             }
-            //Logged in successfully        
+            //Logged in successfully 
             Console.WriteLine($"Welcome lovely {loggedInUser.UserName}");
             AccountService.ShowAccounts(loggedInUser);
-
 
 
 
