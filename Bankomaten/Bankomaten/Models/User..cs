@@ -2,53 +2,66 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
-namespace Bankomaten.Models  {
-
+namespace Bankomaten.Models
+{
     /*
         Reminder: This class defines the user model USED by Service and UI,
         keep this class focused on user data and the methods required to access it.
         (aka no write/readLines)
     */
-    public class User  {
-        public string UserName { get; set; }
-        public int PinCode { get; set; }
-        public Account[] Accounts { get; set; }
-        /*
-            public Account[] Accounts { get; set;}
-            ^ This needs to be changed to it's own List class, rather than being an array,
-            since each user must be able to have a different number of Accounts.
+    public class User
+    {
+        public string UserName { get; }
+        [JsonInclude]private int PinCode { get; }
+        public List<Account> Accounts { get; }
+        
+        private int PinTries;
+        private DateTime? LockedAt;
 
-            You can put it inside of Account.cs
-        */
+        public bool IsLocked
+        {
+            get
+            {
+                if (LockedAt == null)
+                    return false;
 
-        public User(string userName, int pinCode, Account[] accounts)
+                return (DateTime.Now - LockedAt.Value).TotalSeconds < 30;
+            }
+        }
+        public User(string userName, int pinCode, List<Account> accounts)
         {
             UserName = userName;
             PinCode = pinCode;
             Accounts = accounts;
         }
-
-        /*
-            Login() method should only find and return the User matching the username.
-            The actual login flow and PIN validation will be handled by other parts of the application
-        */
-        public static User Login(User[] users)
+        public bool CheckPin(int enteredPin)
         {
-            Console.Write("Username: ");
-            string username = Console.ReadLine(); William i UI
-
-            foreach (User user in users)
+            if (IsLocked)
+                return false;
+            if (LockedAt !=null)
+            { ResetPinTries(); }
+            if (enteredPin == PinCode)
             {
-                if (user.UserName == username)
-                {
-                    return user;
-                }
+                ResetPinTries(); // Reset tries on successful login
+                return true;
             }
 
-            return null;
+            PinTries++;
+            if (PinTries >= 3)
+            {
+                LockedAt = DateTime.Now;
+               
+                Console.WriteLine("Too many failed attempts. Your account is locked for 30 seconds."); // Remove when all done in UI.
+            }
+            return false;
         }
+        private void ResetPinTries()
+        {
+            PinTries = 0;
+            LockedAt = null;
 
-
+        }
     }
 }

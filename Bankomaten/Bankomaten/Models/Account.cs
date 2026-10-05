@@ -7,45 +7,62 @@ namespace Bankomaten.Models  {
         Reminder: This class defines the Account model used by Service,
         keep account data here and make sure balance changes can be controlled from here.
     */
-    public class Account  {
-        public string AccountName { get; set; }
-        public decimal Balance { get; set; }
-
-        /*
-            public decimal Balance { get; set; }
-            ^ This should change from public, as Balance should not be editable from outside of this class.
-            So you can replace the setter with a control method,
-            (think that deposit, withdrawls etc, need to go call that setter.)
-        */
-
-        /*
-            In Account(), remember that it must support different starting balances
-            and that balances should use decimal.
-        */
-
+    public class Account  
+    {
+        public string AccountName { get; }
+        //Only allow getting the balance from outside, not setting it directly. Only account methods should be able to change the balance.
+        public decimal Balance { get; private set; }
         public Account(string accountName, decimal balance)
         {
             AccountName = accountName;
             Balance = balance;
         }
-
-        /*
-            ShowAccounts() Should be in AccountService.cs
-            Think of it like this: Account.cs should represent account data,
-            while AccountService handles operations and managing the data.
-
-            So you can leave this as is and we'll tell Martin to move it or remove it.
-        */
-        public static void ShowAccounts(User user)
+        public bool Deposit(decimal amount)
         {
-            Console.WriteLine();
-            Console.WriteLine($"{user.UserName}s accounts:");
-
-            foreach (Account account in user.Accounts)
+            if (amount <= 0)
             {
-                Console.WriteLine(
-                $"{account.AccountName}: {account.Balance:C}");
+                return false; 
+            }
+            Balance += amount;
+            return true;
+        }
+        public bool Withdraw(decimal amount)
+        {
+            if (amount <= 0 || Balance < amount)
+            {
+                return false;
+            }
+            Balance -= amount;
+            return true;
+        }
+
+        public static class AccountFactory
+        {
+            private static readonly string[] AccountNames =
+            {
+            "Salaryaccount",
+            "Savingsaccount",
+            "Vacationaccount",
+            "InvestmentAccount",
+            "EmergencyFund",
+            "BillsAccount"            
+            };
+
+            public static List<Account> GenerateAccounts()
+            {
+                Random random = new Random();
+                int numberOfAccounts = random.Next(1, 7);
+                List<Account> accounts = new List<Account>();
+
+                for (int i = 0; i < numberOfAccounts; i++)
+                {
+                    string name = AccountNames[i];
+                    decimal balance = random.Next(100, 10000); // Random balance between 100 and 10 000
+                    accounts.Add(new Account(name, balance));
+                }
+                return accounts;
             }
         }
+
     }
 }
