@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Bankomaten.Models
 {
@@ -13,8 +14,9 @@ namespace Bankomaten.Models
     public class User
     {
         public string UserName { get; }
-        private int PinCode { get; }
+        [JsonInclude]private int PinCode { get; }
         public List<Account> Accounts { get; }
+        
         private int PinTries;
         private DateTime? LockedAt;
 

@@ -48,7 +48,6 @@ namespace Bankomaten.Models  {
             "BillsAccount"            
             };
 
-
             public static List<Account> GenerateAccounts()
             {
                 Random random = new Random();
