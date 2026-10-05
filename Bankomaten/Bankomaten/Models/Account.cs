@@ -45,15 +45,14 @@ namespace Bankomaten.Models  {
             "Vacationaccount",
             "InvestmentAccount",
             "EmergencyFund",
-            "BillsAccount",
-            "EducationAccount"
+            "BillsAccount"            
             };
 
 
             public static List<Account> GenerateAccounts()
             {
                 Random random = new Random();
-                int numberOfAccounts = random.Next(1, 8);
+                int numberOfAccounts = random.Next(1, 7);
                 List<Account> accounts = new List<Account>();
 
                 for (int i = 0; i < numberOfAccounts; i++)
