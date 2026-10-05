@@ -13,9 +13,9 @@ namespace Bankomaten.Service {
         This is on me, as I underrestimated the task, so I will try and comment-guide as much as I can in here.
     */
 
-    public static class ValidationHelper
+    public class ValidationHelper
     {
-        public static bool VerifyPin(User user, int enteredPin)
+        public bool VerifyPin(User user, int enteredPin)
         {
             return user.CheckPin(enteredPin);
         }

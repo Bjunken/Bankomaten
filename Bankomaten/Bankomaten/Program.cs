@@ -44,9 +44,9 @@ namespace Bankomaten
                     Console.WriteLine("Invalid PIN format. Please enter a numeric PIN.");
                     continue;
                 }
-                bool isValid = ValidationHelper.VerifyPin(loggedInUser, enteredPin);
+                //bool isValid = ValidationHelper.VerifyPin(loggedInUser, enteredPin);
                 
-                if (!isValid)
+                //if (!isValid)
                 {
                     continue;
                 }

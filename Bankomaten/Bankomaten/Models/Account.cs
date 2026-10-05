@@ -32,7 +32,7 @@ namespace Bankomaten.Models  {
             {
                 return false;
             }
-            Balance += amount;
+            Balance -= amount;
             return true;
         }
 

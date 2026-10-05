@@ -24,6 +24,7 @@ namespace Bankomaten.Models
             {
                 if (LockedAt == null)
                     return false;
+
                 return (DateTime.Now - LockedAt.Value).TotalSeconds < 30;
             }
         }
@@ -37,7 +38,8 @@ namespace Bankomaten.Models
         {
             if (IsLocked)
                 return false;
-
+            if (LockedAt !=null)
+            { ResetPinTries(); }
             if (enteredPin == PinCode)
             {
                 ResetPinTries(); // Reset tries on successful login
@@ -48,7 +50,8 @@ namespace Bankomaten.Models
             if (PinTries >= 3)
             {
                 LockedAt = DateTime.Now;
-                Console.WriteLine("Too many failed attempts. Your account is locked for 30 seconds.");
+               
+                Console.WriteLine("Too many failed attempts. Your account is locked for 30 seconds."); // Remove when all done in UI.
             }
             return false;
         }
