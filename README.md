@@ -137,7 +137,7 @@ Kristin CHECKLIST: (Klar)
  - [X] Method returns a result that Service/UI can use.
  - [X] No unnecessary UI/login-flow logic is added here.
 
- Before handing over to Person C/D:
+ Before handing over to Martin:
  - [X] Build succeeds.
  - [X] Classes and property names are agreed upon.
  - [X] Constructor signatures are stable.
