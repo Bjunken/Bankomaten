@@ -121,27 +121,27 @@ Block B
 Kristin CHECKLIST: (Klar)
 
  User.cs
- [X] User contains the required user information.
- [X] Accounts uses the group's chosen List data structure.
- [X] Users can have different numbers of accounts.
- [X] Login/user lookup returns a User that other classes can use.
+ - [X] User contains the required user information.
+ - [X] Accounts uses the group's chosen List data structure.
+ - [X] Users can have different numbers of accounts.
+ - [X] Login/user lookup returns a User that other classes can use.
 
  Account.cs
- [X] Account contains account name and decimal balance.
- [X] Balance cannot be freely changed without following bank rules.
- [X] Account supports the structure needed by AccountService.
+ - [X] Account contains account name and decimal balance.
+ - [X] Balance cannot be freely changed without following bank rules.
+ - [X] Account supports the structure needed by AccountService.
 
  ValidationHelper.cs
- [X] PIN validation has a maximum number of attempts.
- [X] Invalid PIN input counts as an attempt.
- [X] Method returns a result that Service/UI can use.
- [X] No unnecessary UI/login-flow logic is added here.
+ - [X] PIN validation has a maximum number of attempts.
+ - [X] Invalid PIN input counts as an attempt.
+ - [X] Method returns a result that Service/UI can use.
+ - [X] No unnecessary UI/login-flow logic is added here.
 
  Before handing over to Person C/D:
- [X] Build succeeds.
- [X] Classes and property names are agreed upon.
- [X] Constructor signatures are stable.
- [X] Person C and D know what methods/properties they can use.
+ - [X] Build succeeds.
+ - [X] Classes and property names are agreed upon.
+ - [X] Constructor signatures are stable.
+ - [X] Person C and D know what methods/properties they can use.
 
  Block C
  
