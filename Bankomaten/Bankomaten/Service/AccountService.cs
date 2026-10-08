@@ -22,9 +22,11 @@ namespace Bankomaten.Service {
                 $"{account.AccountName}: {account.Balance:C}");
             }
         }
+        // Can remove ShowAccounts completely.
 
-
-        //Locate the desired account of the current user
+        // This method can be redone and name change to fit the structure a bit better: TryGetAccount, with parameter for user, account index and out bankaccount account.
+        // check if account index is less than 0 OR account index is higher or equal to user.accounts.count, if true set account to null and return false.
+        // otherwise just set account to user.accounts[accountIndex] and return true
         public static Account AccountSelection(User user)
         {
             while (true)
@@ -42,9 +44,10 @@ namespace Bankomaten.Service {
                 }
             }
         }
+        // write a short bool method for "IsValidAmount" just take parameter decimal and check if the input is higher than 0
 
 
-        public TransactionResult TransferMoney(User user)
+        public TransactionResult TransferMoney(User user) // should have parameters for user, fromindex, to index and deimal amount. So you can make similar checks as you did in BankService.
         {
             Console.WriteLine("Please enter the account you would like to transfer money from: "); //Remove when done in UI
             Account accountWithdraw = AccountSelection(user);
@@ -80,7 +83,9 @@ namespace Bankomaten.Service {
             return TransactionResult.SuccessfulTransaction;
 
 
-            //Todo: Add withdraw
+            //Todo: Add withdraw <- should have parameter for user, accountIndex and decimal amount for checks.
+            // write deposit(), should have same paramaters as Withdraw.
+            // write a GetBalance() should have same parameters as deposit and withdraw.
         }
     }
 }
