@@ -22,7 +22,7 @@ namespace Bankomaten.Service {
         }
 
 
-        public User? LocateUser() //add into parameter later string username
+        public User? LocateUser() //add into parameter later string username (UI will handle all readlines later on)
         {
             string username = Console.ReadLine();
             currentUser = users.Find(u => u.UserName == username);
@@ -52,10 +52,14 @@ namespace Bankomaten.Service {
                 return LoginResult.WrongPin;
             }
 
-            return LoginResult.SuccessfulLogin;
-
-
-            //To do add log out method and pin requirements on bank transfers
+            return LoginResult.SuccessfulLogin;     
         }
+
+
+        public void Logout()
+        {
+            currentUser = null;
+        }
+        //Todo: Remove all readlines as those will be handled in the ui and instead utilise parameters. use pin logic for transfers.
     }
 }
