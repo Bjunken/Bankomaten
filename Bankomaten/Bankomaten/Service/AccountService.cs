@@ -5,26 +5,15 @@ using System.Text;
 using Bankomaten.Utils;
 
 namespace Bankomaten.Service {
-    /*
-        Reminder: This class handles the account features such as showing accounts and displaying their balance. 
-        Transfering money between accounts and withdrawing money.
-    */
-    internal class AccountService 
-    {
-        // check if account index is less than 0 OR account index is higher or equal to user.accounts.count, if true set account to null and return false.
-        // otherwise just set account to user.accounts[accountIndex] and return true
-        public bool TryGetAccount(User user, int accountIndex, out Account account)
-        {
-            if (accountIndex < 0 || accountIndex >= user.Accounts.Count)
-            {
+    internal class AccountService {
+        public bool TryGetAccount(User user, int accountIndex, out Account account) { // <- add a '?' to the out Account datatype, since it can be null.
+            if (accountIndex < 0 || accountIndex >= user.Accounts.Count) {
                 account = null;
                 return false;
             }
             account = user.Accounts[accountIndex];
             return true;
         }
-
-
         //Will be removed after Transfer is finished
         public static Account AccountSelection(User user)
         {
@@ -43,97 +32,70 @@ namespace Bankomaten.Service {
                 }
             }
         }
-
-
-        // write a short bool method for "IsValidAmount" just take parameter decimal and check if the input is higher than 0
-        public bool IsValidAmount(decimal input)
-        {
-            if (input > 0)
-            {
+        public bool IsValidAmount(decimal input) { // <-- change paramter name to 'amount' instead to keep with the naming scheme.
+            if (input > 0) { // <- you will get the same effect with just "return input > 0;" as it will only give true or false.
                 return true;
             }
             return false;
         }
-
-        public TransactionResult TransferMoney(User user, int fromindex, int toindex, decimal amount) // should have parameters for user, fromindex, to index and deimal amount. So you can make similar checks as you did in BankService.
+        public TransactionResult TransferMoney(User user, int fromindex, int toindex, decimal amount) // <-- can change name to just 'transfer' to keep within the naming scheme, same with the paramters, use camelcasing, (fromIndex, toIndex).
         {
             Console.WriteLine("Please enter the account you would like to transfer money from: "); //Remove when done in UI
             Account accountWithdraw = AccountSelection(user);
 
             Console.WriteLine("Please enter the account you would like to transfer money to: "); //Remove when done in UI
             Account accountDeposit = AccountSelection(user);
-
+            // this should just be an if check, (!TryGetAccount) twice, one with from Index and one for toIndex.
+            
             //If the user wrote same account when AccountSelection is called let them know they cant transfer to same account
-            if (accountWithdraw == accountDeposit)
-            {
+            if (accountWithdraw == accountDeposit) { // <- you can just compare the input Index's.
                 return TransactionResult.SameAccount;
             }
-
-            Console.WriteLine("Please enter how much money you would like to transfer: "); 
+            if (!IsValidAmount(amount)) {
+                return TransactionResult.InvalidAmount;
+            }
+            Console.WriteLine("Please enter how much money you would like to transfer: "); // <- remove
 
             if (!decimal.TryParse(Console.ReadLine(), out decimal transferAmount))
             {
                 return TransactionResult.InvalidAmount;
             }
-
-            if (!IsValidAmount(amount))
-            {
-                return TransactionResult.InvalidAmount;
-            }
-
-            if (transferAmount > accountWithdraw.Balance)
-            {
+            // Remove the whole tryparse here ^.
+            if (transferAmount > accountWithdraw.Balance) { // (fromAccount!.AccountBalance < amount) (since you're removing the readlines)
                 return TransactionResult.InsufficientFunds;
             }
-
-            accountWithdraw.Withdraw(transferAmount);
-            accountDeposit.Deposit(transferAmount);
+            accountWithdraw.Withdraw(transferAmount); // <- fromAccount.Withdraw(amount)
+            accountDeposit.Deposit(transferAmount); // <- toAccount!.Deposit(amount) since you're removing the readlines.
             return TransactionResult.SuccessfulTransaction;
         }
-
-
-        //Call upon the method from account to withdraw the ammount and return for BankServices
-        public TransactionResult Withdraw(User user, int  accountIndex, decimal amount)
-        {
-            if (!TryGetAccount(user, accountIndex, out Account account))
-            {
+        public TransactionResult Withdraw(User user, int  accountIndex, decimal amount) {
+            if (!TryGetAccount(user, accountIndex, out Account account)) { // <- add a '?' to Account datatype since it can be null.
                 return TransactionResult.InvalidAccountIndex;
             }
-
-            if(!IsValidAmount(amount))
-            {
+            if(!IsValidAmount(amount)) {
                 return TransactionResult.InvalidAmount;
             }
+            /*
+            Need to add a balance check here.
+            */
             account.Withdraw(amount);
             return TransactionResult.SuccessfulTransaction;
         }
-
-
-        //Call upon the method from account to deposit the ammount and return for BankServices
-        public TransactionResult Deposit(User user, int accountIndex, decimal amount)
-        {
-            if (!TryGetAccount(user, accountIndex, out Account account))
-            {
+        public TransactionResult Deposit(User user, int accountIndex, decimal amount) {
+            if (!TryGetAccount(user, accountIndex, out Account account)) {// <- add a '?' to Account datatype since it can be null.
                 return TransactionResult.InvalidAccountIndex;
             }
-
-            if (!IsValidAmount(amount))
-            {
+            if (!IsValidAmount(amount)) {
                 return TransactionResult.InvalidAmount;
             }
             account.Deposit(amount);
             return TransactionResult.SuccessfulTransaction;
         }
-
-
-        public TransactionResult GetBalance(User user, int accountIndex,out decimal balance)
-        {
-            if(!TryGetAccount(user, accountIndex, out Account account))
-            {
+        public TransactionResult GetBalance(User user, int accountIndex, out decimal balance) {
+            if(!TryGetAccount(user, accountIndex, out Account account)) { // <- add a '?' to Account datatype since it can be null.
                 balance = 0;
                 return TransactionResult.InvalidAccountIndex;
             }
-
             balance = account.Balance;
             return TransactionResult.SuccessfulTransaction;
         }
