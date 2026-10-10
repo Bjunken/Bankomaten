@@ -11,22 +11,21 @@ namespace Bankomaten.Service {
     */
     internal class AccountService 
     {
-        public static void ShowAccounts(User user)
-        {
-            Console.WriteLine();
-            Console.WriteLine($"{user.UserName}s accounts:");
-
-            foreach (Account account in user.Accounts)
-            {
-                Console.WriteLine(
-                $"{account.AccountName}: {account.Balance:C}");
-            }
-        }
-        // Can remove ShowAccounts completely.
-
-        // This method can be redone and name change to fit the structure a bit better: TryGetAccount, with parameter for user, account index and out bankaccount account.
         // check if account index is less than 0 OR account index is higher or equal to user.accounts.count, if true set account to null and return false.
         // otherwise just set account to user.accounts[accountIndex] and return true
+        public bool TryGetAccount(User user, int accountIndex, out Account account)
+        {
+            if (accountIndex < 0 || accountIndex >= user.Accounts.Count)
+            {
+                account = null;
+                return false;
+            }
+            account = user.Accounts[accountIndex];
+            return true;
+        }
+
+
+        //Will be removed after Transfer is finished
         public static Account AccountSelection(User user)
         {
             while (true)
@@ -44,10 +43,19 @@ namespace Bankomaten.Service {
                 }
             }
         }
+
+
         // write a short bool method for "IsValidAmount" just take parameter decimal and check if the input is higher than 0
+        public bool IsValidAmount(decimal input)
+        {
+            if (input > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
-
-        public TransactionResult TransferMoney(User user) // should have parameters for user, fromindex, to index and deimal amount. So you can make similar checks as you did in BankService.
+        public TransactionResult TransferMoney(User user, int fromindex, int toindex, decimal amount) // should have parameters for user, fromindex, to index and deimal amount. So you can make similar checks as you did in BankService.
         {
             Console.WriteLine("Please enter the account you would like to transfer money from: "); //Remove when done in UI
             Account accountWithdraw = AccountSelection(user);
@@ -68,7 +76,7 @@ namespace Bankomaten.Service {
                 return TransactionResult.InvalidAmount;
             }
 
-            if (transferAmount <= 0)
+            if (!IsValidAmount(amount))
             {
                 return TransactionResult.InvalidAmount;
             }
@@ -81,11 +89,53 @@ namespace Bankomaten.Service {
             accountWithdraw.Withdraw(transferAmount);
             accountDeposit.Deposit(transferAmount);
             return TransactionResult.SuccessfulTransaction;
+        }
 
 
-            //Todo: Add withdraw <- should have parameter for user, accountIndex and decimal amount for checks.
-            // write deposit(), should have same paramaters as Withdraw.
-            // write a GetBalance() should have same parameters as deposit and withdraw.
+        //Call upon the method from account to withdraw the ammount and return for BankServices
+        public TransactionResult Withdraw(User user, int  accountIndex, decimal amount)
+        {
+            if (!TryGetAccount(user, accountIndex, out Account account))
+            {
+                return TransactionResult.InvalidAccountIndex;
+            }
+
+            if(!IsValidAmount(amount))
+            {
+                return TransactionResult.InvalidAmount;
+            }
+            account.Withdraw(amount);
+            return TransactionResult.SuccessfulTransaction;
+        }
+
+
+        //Call upon the method from account to deposit the ammount and return for BankServices
+        public TransactionResult Deposit(User user, int accountIndex, decimal amount)
+        {
+            if (!TryGetAccount(user, accountIndex, out Account account))
+            {
+                return TransactionResult.InvalidAccountIndex;
+            }
+
+            if (!IsValidAmount(amount))
+            {
+                return TransactionResult.InvalidAmount;
+            }
+            account.Deposit(amount);
+            return TransactionResult.SuccessfulTransaction;
+        }
+
+
+        public TransactionResult GetBalance(User user, int accountIndex,out decimal balance)
+        {
+            if(!TryGetAccount(user, accountIndex, out Account account))
+            {
+                balance = 0;
+                return TransactionResult.InvalidAccountIndex;
+            }
+
+            balance = account.Balance;
+            return TransactionResult.SuccessfulTransaction;
         }
     }
 }
