@@ -2,7 +2,11 @@ bin/
 obj/
 .vs/
 .idea/
+.Models/
 .Program.cs
+.Account.cs
+.User.cs
+.ValidationHelper.cs
 *.user
 *.suo
 *.userosscache
@@ -10,3 +14,4 @@ obj/
 .DS_Store
 Thumbs.db
 Data/accounts.json
+.README.md
