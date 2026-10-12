@@ -26,7 +26,7 @@ namespace Bankomaten.Service
         }
 
 
-        // Call upon the method from account to deposit the ammount and return for BankServices
+        // Call upon the method from Account.cs to deposit the ammount and return for BankServices
         public TransactionResult Deposit(User user, int accountIndex, decimal amount)
         {
             if (!TryGetAccount(user, accountIndex, out Account? account))
@@ -43,7 +43,7 @@ namespace Bankomaten.Service
         }
 
 
-        // Call upon the method from account to withdraw the ammount and return for BankServices
+        // Call upon the method from Account.cs to withdraw the ammount and return for BankServices
         public TransactionResult Withdraw(User user, int accountIndex, decimal amount)
         {
 
@@ -67,10 +67,10 @@ namespace Bankomaten.Service
         }
 
 
-
+        // Call upon the methods from Account.cs to withdraw and deposit the ammount and return for BankServices
         public TransactionResult Transfer(User user, int fromIndex, int toIndex, decimal amount)
         {
-            // Checks that the user does not withdraw and deposits to the same account
+            
             if (!TryGetAccount(user, fromIndex, out Account? fromAccount))
             {
                 return TransactionResult.InvalidAccountIndex;
@@ -81,7 +81,7 @@ namespace Bankomaten.Service
                 return TransactionResult.InvalidAccountIndex;
             }
 
-            if (fromIndex == toIndex)
+            if (fromIndex == toIndex) // Checks that the user does not withdraw and deposits to the same account
             {
                 return TransactionResult.SameAccount;
             }
