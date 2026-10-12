@@ -7,6 +7,13 @@ obj/
 .Account.cs
 .User.cs
 .ValidationHelper.cs
+./Service
+.AccountService.cs
+.BankService.cs
+.ValidationHelper.cs
+/Utils
+.DataHandling.cs
+.ErrorHandling.cs
 *.user
 *.suo
 *.userosscache
