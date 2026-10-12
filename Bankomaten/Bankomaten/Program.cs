@@ -1,6 +1,8 @@
 ﻿using Bankomaten.Models;
 using Bankomaten.Service;
 using Bankomaten.UI;
+using System.Reflection.Metadata;
+using static Bankomaten.Models.Account;
 
 namespace Bankomaten
 {
@@ -8,47 +10,60 @@ namespace Bankomaten
     {
         static void Main(string[] args) 
         {
-            User[] users =
+            //Creates a list of users with their usernames, PINs, and accounts
+            List<User> users = new List<User>();
+
+            users.Add(new User("Linus", 1111, AccountFactory.GenerateAccounts()));
+            users.Add(new User("Kristin", 2222, AccountFactory.GenerateAccounts()));
+            users.Add(new User("William", 3333, AccountFactory.GenerateAccounts()));
+            users.Add(new User("Martin", 4444, AccountFactory.GenerateAccounts()));
+            users.Add(new User("Anas", 5555, AccountFactory.GenerateAccounts()));
+            //Login process
+            User loggedInUser = null;
+            while (true)
             {
-                new User("Linus", 1111, new Account []
-                {
-                    new Account("Salaryaccount", 12500.50m),
-                    new Account("Savingsaccount", 5000.75m)
-                }),
-                new User("Kristin", 2222, new Account []
-                {
-                    new Account("Salaryaccount", 1500.50m),
-                    new Account("Savingsaccount", 4586.75m),
-                    new Account("Vacationaccount", 8563.75m)
-                }),
-                new User("William", 3333, new Account[] 
-                {   new Account("Salaryaccount", 12547.50m), 
-                    new Account("Savingsaccount", 5001.75m)
-                }),
-                new User("Martin", 4444, new Account[] 
-                {   new Account("Salaryaccount", 4598.50m), 
-                    new Account("Savingsaccount", 50.75m) 
-                }),
-                new User("Admin", 5555, new Account[] 
-                {   new Account("Salaryaccount", 8963.50m),                      
-                })
-            };
-            Console.WriteLine("Welcome to SyntaxSquad Bank");
-            User loggedInUser = User.Login (users);
-            
+                Console.Write("Username: ");
+            string username = Console.ReadLine();
+
+            loggedInUser = users.Find(u => u.UserName == username);
             if (loggedInUser == null)
             {
                 Console.WriteLine("Unknown user.");
-                return;
-            }
+                continue; //returns to the beginning of the loop to ask for username again.
+                }
+            //Pin-validation
+            
+                if (loggedInUser.IsLocked)
+                {
+                    Console.WriteLine("Your account is locked. Please try again later.");
+                    continue; //returns to the beginning of the loop to ask for username again.
+                }
+                Console.Write("Enter PIN: ");
+                if(!int.TryParse(Console.ReadLine(), out int enteredPin))
+                {
+                    Console.WriteLine("Invalid PIN format. Please enter a numeric PIN.");
+                    continue;
+                }
+                var validator = new ValidationHelper();
+                bool isValid = validator.VerifyPin(loggedInUser, enteredPin);
 
-            if (!ValidationHelper.VerifyPin(loggedInUser))
-            {
-                Console.WriteLine("To many failed login attempts.");
-                return;
+                if (!isValid)
+                {
+                    continue;
+                }
+                break; // Exit the loop after successful login and account display                          
+
+
             }
+            //Logged in successfully 
             Console.WriteLine($"Welcome lovely {loggedInUser.UserName}");
-            Account.ShowAccounts(loggedInUser);
+            AccountService.ShowAccounts(loggedInUser);
+
+
+
+
+
+
 
         }
     }
