@@ -1,8 +1,9 @@
 ﻿using Bankomaten.Models;
+using Bankomaten.Utils;
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Text;
-using Bankomaten.Utils;
 
 namespace Bankomaten.Service
 {
@@ -21,18 +22,14 @@ namespace Bankomaten.Service
 
         public bool IsValidAmount(decimal amount)
         { 
-            if (amount > 0)
-            { 
-                return true;
-            }
-            return false;
+            return amount > 0;
         }
 
 
         // Call upon the method from account to deposit the ammount and return for BankServices
         public TransactionResult Deposit(User user, int accountIndex, decimal amount)
         {
-            if (!TryGetAccount(user, accountIndex, out Account? accountDeposit))
+            if (!TryGetAccount(user, accountIndex, out Account? account))
             {
                 return TransactionResult.InvalidAccountIndex;
             }
@@ -41,7 +38,7 @@ namespace Bankomaten.Service
             {
                 return TransactionResult.InvalidAmount;
             }
-            accountDeposit.Deposit(amount);
+            account!.Deposit(amount);
             return TransactionResult.SuccessfulTransaction;
         }
 
@@ -50,7 +47,7 @@ namespace Bankomaten.Service
         public TransactionResult Withdraw(User user, int accountIndex, decimal amount)
         {
 
-            if (!TryGetAccount(user, accountIndex, out Account? accountWithdraw))
+            if (!TryGetAccount(user, accountIndex, out Account? account))
             {
                 return TransactionResult.InvalidAccountIndex;
             }
@@ -60,17 +57,12 @@ namespace Bankomaten.Service
                 return TransactionResult.InvalidAmount;
             }
 
-            if (!IsValidAmount(amount))
-            {
-                return TransactionResult.InvalidAmount;
-            }
-
-            //will return InsufficientFunds if Withdraw is returned false from Account.cs
-            if (!accountWithdraw.Withdraw(amount))
+            if (account!.Balance < amount)
             {
                 return TransactionResult.InsufficientFunds;
             }
 
+            account.Withdraw(amount);
             return TransactionResult.SuccessfulTransaction;
         }
 
@@ -79,6 +71,16 @@ namespace Bankomaten.Service
         public TransactionResult Transfer(User user, int fromIndex, int toIndex, decimal amount)
         {
             // Checks that the user does not withdraw and deposits to the same account
+            if (!TryGetAccount(user, fromIndex, out Account? fromAccount))
+            {
+                return TransactionResult.InvalidAccountIndex;
+            }
+
+            if (!TryGetAccount(user, toIndex, out Account? toAccount))
+            {
+                return TransactionResult.InvalidAccountIndex;
+            }
+
             if (fromIndex == toIndex)
             {
                 return TransactionResult.SameAccount;
@@ -89,22 +91,13 @@ namespace Bankomaten.Service
                 return TransactionResult.InvalidAmount;
             }
 
-            if (!TryGetAccount(user, fromIndex, out Account? accountWithdraw))
-            {
-                return TransactionResult.InvalidAccountIndex;
-            }
-
-            if (!TryGetAccount(user, toIndex, out Account? accountDeposit))
-            {
-                return TransactionResult.InvalidAccountIndex;
-            }
-
-            if (!accountWithdraw.Withdraw(amount))
+            if (fromAccount!.Balance < amount)
             {
                 return TransactionResult.InsufficientFunds;
             }
 
-            accountDeposit.Deposit(amount);
+            fromAccount!.Withdraw(amount);
+            toAccount!.Deposit(amount);
             return TransactionResult.SuccessfulTransaction;
         }
 
@@ -116,7 +109,7 @@ namespace Bankomaten.Service
                 balance = 0;
                 return TransactionResult.InvalidAccountIndex;
             }
-            balance = account.Balance;
+            balance = account!.Balance;
             return TransactionResult.SuccessfulTransaction;
         }
     }

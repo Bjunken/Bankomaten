@@ -19,6 +19,8 @@ namespace Bankomaten.Service
             _validationHelper = validationHelper;
             _accountService = accountService;
         }
+
+
         public User? LocateUser(string userName)
         {
             foreach (User user in _users)
@@ -31,6 +33,8 @@ namespace Bankomaten.Service
             }
             return null;
         }
+
+
         public LoginResult Login(string userName, string pinText)
         {
             User? user = LocateUser(userName);
@@ -42,7 +46,7 @@ namespace Bankomaten.Service
             {
                 return LoginResult.InvalidPinFormat;
             }
-            if (user.IsLocked)
+            if (user!.IsLocked)
             {
                 return LoginResult.UserLocked;
             }
@@ -73,7 +77,7 @@ namespace Bankomaten.Service
             {
                 return TransactionResult.NonLoggedIn;
             }
-            return _accountService.Deposit(_currentUser, accountIndex, amount);
+            return _accountService.Deposit(_currentUser!, accountIndex, amount);
         }
 
 
@@ -88,7 +92,7 @@ namespace Bankomaten.Service
                 return TransactionResult.InvalidPinFormat;
             }
 
-            if (_currentUser.IsLocked)
+            if (_currentUser!.IsLocked)
             {
                 return TransactionResult.UserLocked;
             }
@@ -97,7 +101,7 @@ namespace Bankomaten.Service
             {
                 return TransactionResult.WrongPin;
             }
-            return _accountService.Withdraw(_currentUser, accountIndex, amount);
+            return TransactionResult.SuccessfulTransaction;
         }
 
 
@@ -108,7 +112,7 @@ namespace Bankomaten.Service
                 return TransactionResult.NonLoggedIn;
             }
 
-            return _accountService.Transfer(_currentUser, fromindex, toindex, amount);
+            return _accountService.Transfer(_currentUser!, fromindex, toindex, amount);
         }
 
 
@@ -119,7 +123,7 @@ namespace Bankomaten.Service
                 balance = 0;
                 return TransactionResult.NonLoggedIn;
             }
-            return _accountService.GetBalance(_currentUser, accountIndex, out balance);
+            return _accountService.GetBalance(_currentUser!, accountIndex, out balance);
         }
     }
 }
