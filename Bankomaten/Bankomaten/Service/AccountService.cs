@@ -9,7 +9,7 @@ namespace Bankomaten.Service
     internal class AccountService
     {
         public bool TryGetAccount(User user, int accountIndex, out Account? account)
-        { // <- add a '?' to the out Account datatype, since it can be null.
+        {
             if (accountIndex < 0 || accountIndex >= user.Accounts.Count)
             {
                 account = null;
@@ -18,46 +18,29 @@ namespace Bankomaten.Service
             account = user.Accounts[accountIndex];
             return true;
         }
-        //Will be removed after Transfer is finished
 
-        public bool IsValidAmount(decimal input)
-        { // <-- change paramter name to 'amount' instead to keep with the naming scheme.
-            if (input > 0)
-            { // <- you will get the same effect with just "return input > 0;" as it will only give true or false.
+        public bool IsValidAmount(decimal amount)
+        { 
+            if (amount > 0)
+            { 
                 return true;
             }
             return false;
         }
 
 
-        public TransactionResult Transfer(User user, int fromIndex, int toIndex, decimal amount)
+        // Call upon the method from account to deposit the ammount and return for BankServices
+        public TransactionResult Deposit(User user, int accountIndex, decimal amount)
         {
-            // Checks that the user does not withdraw and deposits to the same account
-            if (fromIndex == toIndex)
+            if (!TryGetAccount(user, accountIndex, out Account? accountDeposit))
             {
-                return TransactionResult.SameAccount;
+                return TransactionResult.InvalidAccountIndex;
             }
 
             if (!IsValidAmount(amount))
             {
                 return TransactionResult.InvalidAmount;
             }
-
-            if (!TryGetAccount(user, fromIndex, out Account accountWithdraw))
-            {
-                return TransactionResult.InvalidAccountIndex;
-            }
-
-            if (!TryGetAccount(user, toIndex, out Account accountDeposit))
-            {
-                return TransactionResult.InvalidAccountIndex;
-            }
-
-            if (!accountWithdraw.Withdraw(amount))
-            {
-                return TransactionResult.InsufficientFunds;
-            }
-
             accountDeposit.Deposit(amount);
             return TransactionResult.SuccessfulTransaction;
         }
@@ -66,18 +49,15 @@ namespace Bankomaten.Service
         // Call upon the method from account to withdraw the ammount and return for BankServices
         public TransactionResult Withdraw(User user, int accountIndex, decimal amount)
         {
-            if (!TryGetAccount(user, accountIndex, out Account account))
-            { // <- add a '?' to Account datatype since it can be null.
-                return TransactionResult.InvalidAccountIndex;
-            }
-            if (!IsValidAmount(amount))
-            {
-                return TransactionResult.InvalidAmount;
-            }
 
             if (!TryGetAccount(user, accountIndex, out Account? accountWithdraw))
             {
                 return TransactionResult.InvalidAccountIndex;
+            }
+
+            if (!IsValidAmount(amount))
+            {
+                return TransactionResult.InvalidAmount;
             }
 
             if (!IsValidAmount(amount))
@@ -96,18 +76,34 @@ namespace Bankomaten.Service
 
 
 
-        //Call upon the method from account to deposit the ammount and return for BankServices
-        public TransactionResult Deposit(User user, int accountIndex, decimal amount)
+        public TransactionResult Transfer(User user, int fromIndex, int toIndex, decimal amount)
         {
-            if (!TryGetAccount(user, accountIndex, out Account? accountDeposit))
+            // Checks that the user does not withdraw and deposits to the same account
+            if (fromIndex == toIndex)
             {
-                return TransactionResult.InvalidAccountIndex;
+                return TransactionResult.SameAccount;
             }
 
             if (!IsValidAmount(amount))
             {
                 return TransactionResult.InvalidAmount;
             }
+
+            if (!TryGetAccount(user, fromIndex, out Account? accountWithdraw))
+            {
+                return TransactionResult.InvalidAccountIndex;
+            }
+
+            if (!TryGetAccount(user, toIndex, out Account? accountDeposit))
+            {
+                return TransactionResult.InvalidAccountIndex;
+            }
+
+            if (!accountWithdraw.Withdraw(amount))
+            {
+                return TransactionResult.InsufficientFunds;
+            }
+
             accountDeposit.Deposit(amount);
             return TransactionResult.SuccessfulTransaction;
         }

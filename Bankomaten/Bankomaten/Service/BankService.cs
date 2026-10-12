@@ -99,15 +99,6 @@ namespace Bankomaten.Service
             }
             return _accountService.Withdraw(_currentUser, accountIndex, amount);
         }
-        public TransactionResult GetBalance(int accountIndex, out decimal balance)
-        {
-            if (!IsLoggedIn())
-            {
-                balance = 0;
-                return TransactionResult.NonLoggedIn;
-            }
-            return _accountService.GetBalance(_currentUser, accountIndex, out balance);
-        }
 
 
         public TransactionResult Transfer(int fromindex, int toindex, decimal amount)
@@ -118,6 +109,17 @@ namespace Bankomaten.Service
             }
 
             return _accountService.Transfer(_currentUser, fromindex, toindex, amount);
+        }
+
+
+        public TransactionResult GetBalance(int accountIndex, out decimal balance)
+        {
+            if (!IsLoggedIn())
+            {
+                balance = 0;
+                return TransactionResult.NonLoggedIn;
+            }
+            return _accountService.GetBalance(_currentUser, accountIndex, out balance);
         }
     }
 }
