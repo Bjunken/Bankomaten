@@ -20,7 +20,7 @@ namespace Bankomaten.Models
         private int PinTries;
         private DateTime? LockedAt;
 
-        public bool IsLocked
+        [JsonIgnore]public bool IsLocked
         {
             get
             {

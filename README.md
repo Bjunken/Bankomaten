@@ -141,11 +141,28 @@ Kristin CHECKLIST: (Klar)
  - [X] Build succeeds.
  - [X] Classes and property names are agreed upon.
  - [X] Constructor signatures are stable.
- - [X] Person C and D know what methods/properties they can use.
 
  Block C
- 
- Block D
+ Martin CHECKLIST: (Klar)
+
+BankService.cs
+- [x] Hold the user list, the logged-in user (`_currentUser`), `ValidationHelper` and `AccountService`, all passed in through the constructor
+- [x] `LocateUser(userName)` finds a user, ignoring upper/lower case, and returns `null` if there is no match
+- [x] `Login(userName, pinText)` returns a `LoginResult`
+  - Order: find user, parse PIN with `int.TryParse`, check `IsLocked`, verify PIN, then set `_currentUser`
+- [x] `CurrentUser` is a read-only property, and `Logout()` clears the logged-in user
+- [x] `IsLoggedIn()` is the single place that checks whether someone is logged in
+- [x] `Deposit`, `Transfer` and `GetBalance` check login, then pass `_currentUser` to `AccountService` and return its result unchanged
+- [x] `Withdraw` requires PIN confirmation (a wrong PIN counts toward the lockout), then calls `AccountService`
+- [x] Return enum results (`LoginResult`, `TransactionResult`) instead of messages, and contain no `Console` calls
+
+AccountService.cs
+- [x] Work on the user's `Account` objects through `user.Accounts`, identified by 0-based index
+- [x] `TryGetAccount` validates the index, and `IsValidAmount` defines a valid amount (> 0)
+- [x] `Deposit`, `Withdraw`, `Transfer` and `GetBalance` all return a `TransactionResult`
+- [x] Call `Account.Deposit()` / `Withdraw()` instead of duplicating balance logic
+- [x] `Transfer` checks everything first (indexes, same account, amount, funds), so one account can never change alone
+- [x] No UI logic and no PIN logic (the PIN check lives in `BankService`)
  
 ## Reflektion
 
