@@ -6,10 +6,15 @@ using static Bankomaten.Models.Account;
 
 namespace Bankomaten
 {
+
     internal class Program
     {
+
+
         static void Main(string[] args) 
         {
+            
+
             //Creates a list of users with their usernames, PINs, and accounts
             List<User> users = new List<User>();
 
@@ -23,23 +28,23 @@ namespace Bankomaten
             while (true)
             {
                 Console.Write("Username: ");
-            string username = Console.ReadLine();
+                string username = Console.ReadLine();
 
-            loggedInUser = users.Find(u => u.UserName == username);
-            if (loggedInUser == null)
-            {
-                Console.WriteLine("Unknown user.");
-                continue; //returns to the beginning of the loop to ask for username again.
+                loggedInUser = users.Find(u => u.UserName == username);
+                if (loggedInUser == null)
+                {
+                    Console.WriteLine("Unknown user.");
+                    continue; //returns to the beginning of the loop to ask for username again.
                 }
-            //Pin-validation
-            
+                //Pin-validation
+
                 if (loggedInUser.IsLocked)
                 {
                     Console.WriteLine("Your account is locked. Please try again later.");
                     continue; //returns to the beginning of the loop to ask for username again.
                 }
                 Console.Write("Enter PIN: ");
-                if(!int.TryParse(Console.ReadLine(), out int enteredPin))
+                if (!int.TryParse(Console.ReadLine(), out int enteredPin))
                 {
                     Console.WriteLine("Invalid PIN format. Please enter a numeric PIN.");
                     continue;
@@ -55,14 +60,17 @@ namespace Bankomaten
 
 
             }
-            //Logged in successfully 
-            Console.WriteLine($"Welcome lovely {loggedInUser.UserName}");
-            AccountService.ShowAccounts(loggedInUser);
+            //Logged in successfully
 
+            LoginMenu loginMenu = new LoginMenu();
+            loginMenu.showloginmenu();
 
+            Console.Clear();
 
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.showMenu();
 
-
+    
 
 
         }
