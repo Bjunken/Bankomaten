@@ -1,8 +1,8 @@
 ﻿using Bankomaten.Models;
 using Bankomaten.Service;
-using Bankomaten.UI;
-using System.Reflection.Metadata;
-using static Bankomaten.Models.Account;
+using Bankomaten.Utils;
+using System;
+using System.Collections.Generic;
 
 namespace Bankomaten
 {
@@ -46,18 +46,14 @@ namespace Bankomaten
                 Console.Write("Enter PIN: ");
                 if (!int.TryParse(Console.ReadLine(), out int enteredPin))
                 {
-                    Console.WriteLine("Invalid PIN format. Please enter a numeric PIN.");
-                    continue;
-                }
-                var validator = new ValidationHelper();
-                bool isValid = validator.VerifyPin(loggedInUser, enteredPin);
+                    new Account("Salaryaccount", 800)
+                })
+            };
 
-                if (!isValid)
-                {
-                    continue;
-                }
-                break; // Exit the loop after successful login and account display                          
-
+            // Same wiring order as the real program
+            ValidationHelper validationHelper = new ValidationHelper();
+            AccountService accountService = new AccountService();
+            BankService bank = new BankService(users, validationHelper, accountService);
 
             }
             //Logged in successfully
@@ -72,7 +68,14 @@ namespace Bankomaten
 
     
 
+            Console.WriteLine("\nDone. Press Enter to exit.");
+            Console.ReadLine();
+        }
 
+        // Helper so the balance checks are one line each
+        static void PrintBalance(BankService bank, int index) {
+            TransactionResult result = bank.GetBalance(index, out decimal balance);
+            Console.WriteLine($"Balance [{index}]:      {result} / {balance}");
         }
     }
 }

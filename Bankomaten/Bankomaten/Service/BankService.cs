@@ -12,6 +12,7 @@ namespace Bankomaten.Service
         private ValidationHelper _validationHelper;
         private List<User> _users;
         private User? _currentUser;
+        public User? CurrentUser => _currentUser;
 
         public BankService(List<User> Users, ValidationHelper validationHelper, AccountService accountService)
         {
@@ -39,7 +40,7 @@ namespace Bankomaten.Service
         public LoginResult Login(string userName, string pinText)
         {
             User? user = LocateUser(userName);
-            if (!IsLoggedIn())
+            if (user == null)
             {
                 return LoginResult.NoUser;
             }
@@ -103,7 +104,7 @@ namespace Bankomaten.Service
             {
                 return TransactionResult.WrongPin;
             }
-            return TransactionResult.SuccessfulTransaction;
+            return _accountService.Withdraw(_currentUser!, accountIndex, amount);
         }
 
 
