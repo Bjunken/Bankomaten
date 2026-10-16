@@ -11,6 +11,7 @@ namespace Bankomaten.Service
         private ValidationHelper _validationHelper;
         private List<User> _users;
         private User? _currentUser;
+        public User? CurrentUser => _currentUser;
 
         public BankService(List<User> Users, ValidationHelper validationHelper, AccountService accountService)
         {
@@ -107,8 +108,12 @@ namespace Bankomaten.Service
                 // A withdrawal PIN counts as an attempt; the menu logs out a locked user.
                 return _currentUser.IsLocked ? TransactionResult.UserLocked : TransactionResult.WrongPin;
             }
+<<<<<<< HEAD
             // The PIN is valid; AccountService checks the amount and updates the balance.
             return _accountService.Withdraw(_currentUser, accountIndex, amount);
+=======
+            return _accountService.Withdraw(_currentUser!, accountIndex, amount);
+>>>>>>> a3e59978d3dc86e706fc7dfa3a6265f950508f0e
         }
 
 
