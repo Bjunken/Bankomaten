@@ -1,7 +1,6 @@
 ﻿using Bankomaten.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Bankomaten.Utils;
 
 namespace Bankomaten.Service
@@ -20,6 +19,9 @@ namespace Bankomaten.Service
             _accountService = accountService;
         }
 
+        // The menu reads the signed-in user's accounts through the bank service.
+        public User? CurrentUser => _currentUser;
+
 
         public User? LocateUser(string userName)
         {
@@ -35,11 +37,11 @@ namespace Bankomaten.Service
         }
 
 
-        // Assigns the user to_currentuser if all verification checks are passed
+        // Find and verify the user here so the login menu only handles input and display.
         public LoginResult Login(string userName, string pinText)
         {
             User? user = LocateUser(userName);
-            if (!IsLoggedIn())
+            if (user == null)
             {
                 return LoginResult.NoUser;
             }
@@ -53,7 +55,8 @@ namespace Bankomaten.Service
             }
             if (!_validationHelper.VerifyPin(user, pinCode))
             {
-                return LoginResult.WrongPin;
+                // The third incorrect attempt locks the user and returns a distinct result.
+                return user.IsLocked ? LoginResult.UserLocked : LoginResult.WrongPin;
             }
             _currentUser = user;
             return LoginResult.SuccessfulLogin;
@@ -101,9 +104,11 @@ namespace Bankomaten.Service
 
             if (!_validationHelper.VerifyPin(_currentUser, pinCode))
             {
-                return TransactionResult.WrongPin;
+                // A withdrawal PIN counts as an attempt; the menu logs out a locked user.
+                return _currentUser.IsLocked ? TransactionResult.UserLocked : TransactionResult.WrongPin;
             }
-            return TransactionResult.SuccessfulTransaction;
+            // The PIN is valid; AccountService checks the amount and updates the balance.
+            return _accountService.Withdraw(_currentUser, accountIndex, amount);
         }
 
 

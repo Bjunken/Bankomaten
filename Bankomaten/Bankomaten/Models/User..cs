@@ -14,12 +14,15 @@ namespace Bankomaten.Models
     public class User
     {
         public string UserName { get; }
+        // Save the PIN in JSON; failed attempts and lock duration only exist for this run.
         [JsonInclude]private int PinCode { get; }
         public List<Account> Accounts { get; }
         
         private int PinTries;
         private DateTime? LockedAt;
 
+        // Do not save the lock status; users are unlocked after a restart.
+        [JsonIgnore]
         public bool IsLocked
         {
             get
@@ -52,8 +55,6 @@ namespace Bankomaten.Models
             if (PinTries >= 3)
             {
                 LockedAt = DateTime.Now;
-               
-                Console.WriteLine("Too many failed attempts. Your account is locked for 30 seconds."); // Remove when all done in UI.
             }
             return false;
         }

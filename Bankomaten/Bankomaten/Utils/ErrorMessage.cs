@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bankomaten.Utilitize {
+namespace Bankomaten.Utils {
     internal class ErrorMessage {
 
     }

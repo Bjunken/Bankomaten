@@ -1,76 +1,40 @@
-﻿using Bankomaten.Models;
 using Bankomaten.Service;
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Reflection.Metadata;
-using static Bankomaten.Models.Account;
+using Bankomaten.Utils;
 
-namespace Bankomaten.UI 
+namespace Bankomaten.UI
 {
-    internal class LoginMenu 
+    internal class LoginMenu
     {
-        /* This method is from User.cs. I will remove the Console.Write and string username from my code
-          when you say that you are done here.
-         */
-        public void showloginmenu()
+        public bool ShowLoginMenu(BankService bank)
         {
+            Console.Title = "Syntax Banken";
 
-            Console.WriteLine("=================================");
-            Console.WriteLine("       WELCOME TO SYNTAX BANK");
-            Console.WriteLine("=================================");
-            Console.WriteLine();
+            while (true)
+            {
+                Console.WriteLine("=================================");
+                Console.WriteLine("  VÄLKOMMEN TILL SYNTAX BANKEN");
+                Console.WriteLine("=================================");
+                Console.Write("Användarnamn: ");
+                string? userName = Console.ReadLine();
+                if (userName == null)
+                    return false;
 
-            //Console.Write("Username: ");
-            //string username = Console.ReadLine();
+                Console.Write("Ange PIN: ");
+                string? pinText = Console.ReadLine();
+                if (pinText == null)
+                    return false;
 
-            //loggedInUser = users.Find(u => u.UserName == username);
-            //if (loggedInUser == null)
-            //{
-            //    Console.WriteLine("Unknown user.");
-            //    continue; //returns to the beginning of the loop to ask for username again.
-            //}
-            ////Pin-validation
+                // Pass the text to BankService so login validation stays outside the UI.
+                LoginResult result = bank.Login(userName, pinText);
+                Console.WriteLine(ErrorHandling.GetLoginMessage(result));
+                // Only a successful login leaves this menu and opens the main menu.
+                if (result == LoginResult.SuccessfulLogin)
+                    return true;
 
-            //if (loggedInUser.IsLocked)
-            //{
-            //    Console.WriteLine("Your account is locked. Please try again later.");
-            //    continue; //returns to the beginning of the loop to ask for username again.
-            //}
-            //Console.Write("Enter PIN: ");
-            //if (!int.TryParse(Console.ReadLine(), out int enteredPin))
-            //{
-            //    Console.WriteLine("Invalid PIN format. Please enter a numeric PIN.");
-            //    continue;
-            //}
-            //var validator = new ValidationHelper();
-            //bool isValid = validator.VerifyPin(loggedInUser, enteredPin);
-
-            //if (!isValid)
-            //{
-            //    continue;
-            //}
-            //break; // Exit the loop after successful login and account display                          
-
-
+                Console.WriteLine("Press Enter to try again.");
+                Console.ReadLine();
+                Console.Clear();
+            }
         }
-        //Logged in successfully
     }
-
-    //public static User Login(User[] users)
-    //{
-    //    Console.Write("Username: ");
-    //    string username = Console.ReadLine(); William i UI
-
-    //    foreach (User user in users)
-    //    {
-    //        if (user.UserName == username)
-    //        {
-    //            return user;
-    //        }
-    //    }
-
-    //    return null;
 }
-

@@ -1,62 +1,204 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static Bankomaten.Models.Account;
+using Bankomaten.Models;
+using Bankomaten.Service;
+using Bankomaten.Utils;
 
 namespace Bankomaten.UI
 {
     internal class MainMenu
     {
-        // =====================================================================
-        // Menu to the banking system after the user has logged in successfully.
-        // =====================================================================
-        public void showMenu()
+        private readonly BankService _bank;
+        private readonly List<User> _users;
+        private readonly DataHandling _dataHandling;
+
+        public MainMenu(BankService bank, List<User> users, DataHandling dataHandling)
         {
+            _bank = bank;
+            _users = users;
+            _dataHandling = dataHandling;
+        }
 
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine();
-            Console.WriteLine("[1] View balance");
-            Console.WriteLine("[2] Transfer money");
-            Console.WriteLine("[3] Withdraw money");
-            Console.WriteLine("[4] Log out");
-            Console.WriteLine();
-
-            Console.Write("Choose an option: ");
-
-            string choice = Console.ReadLine();
-
-            Console.WriteLine();
-            Console.WriteLine("---------------------------------");
-
-            switch (choice)
+        public void ShowMenu()
+        {
+            // Keep showing the menu until BankService has no signed-in user.
+            while (_bank.IsLoggedIn())
             {
-                case "1":
-                    Console.WriteLine($"Your balance is:{loggedInUser.Accounts[1-6].Balance} kr");
-                    break;
+                Console.WriteLine("=================================");
+                Console.WriteLine("        SYNTAX BANKEN MENY");
+                Console.WriteLine("=================================");
+                Console.WriteLine();
+                Console.WriteLine("[1] Visa konton");
+                Console.WriteLine("[2] Kontrollera saldo");
+                Console.WriteLine("[3] Sätta in pengar");
+                Console.WriteLine("[4] Ta ut pengar");
+                Console.WriteLine("[5] Överföra pengar");
+                Console.WriteLine("[6] Logga ut");
 
-                case "2":
-                    Console.WriteLine("Transfer");
-                    Console.WriteLine("Enter amount:");
-                    break;
+                if (!ReadInt("Välj alternativ: ", out int choice))
+                {
+                    _bank.Logout();
+                    return;
+                }
 
-                case "3":
-                    Console.WriteLine("Withdrawal");
-                    Console.WriteLine("Enter amount:");
-                    break;
+                Console.Clear();
+                switch (choice)
+                {
+                    case 1:
+                        ShowAccounts();
+                        break;
 
-                case "4":
-                    Console.WriteLine("You have been logged out.");
-                    break;
+                    case 2:
+                        CheckBalance();
+                        break;
+                    case 3:
+                        Deposit();
+                        break;
+                    case 4:
+                        if (!Withdraw())
+                            return;
+                        break;
+                    case 5:
+                        Transfer();
+                        break;
+                    case 6:
+                        _bank.Logout();
+                        return;
+                    default:
+                        Console.WriteLine("Ogiltigt menyval.");
+                        break;
+                }
+            }
+        }
 
-                default:
-                    Console.WriteLine("Invalid choice!");
-                    break;
+        private void ShowAccounts()
+        {
+            if (_bank.CurrentUser is not User user)
+                return;
+
+            // Show account numbers starting at 1; internal list indexes start at 0.
+            for (int i = 0; i < user.Accounts.Count; i++)
+            {
+                var account = user.Accounts[i];
+                Console.WriteLine($"{i + 1}. {account.AccountName}: {account.Balance:C}");
+            }
+        }
+
+        private void CheckBalance()
+        {
+            if (!ReadAccountIndex("Ange kontonummer: ", out int accountIndex))
+                return;
+
+            TransactionResult result = _bank.GetBalance(accountIndex, out decimal balance);
+            Console.WriteLine(ErrorHandling.GetTransactionMessage(result));
+            // Use the balance only when the service confirms that the account was found.
+            if (result == TransactionResult.SuccessfulTransaction)
+                Console.WriteLine($"Saldo: {balance:C}");
+        }
+
+        private void Deposit()
+        {
+            if (!ReadAccountIndex("Ange kontonummer: ", out int accountIndex) ||
+                !ReadDecimal("Ange belopp: ", out decimal amount))
+                return;
+
+            TransactionResult result = _bank.Deposit(amount, accountIndex);
+            Console.WriteLine(ErrorHandling.GetTransactionMessage(result));
+            SaveAfterSuccess(result);
+        }
+
+        private bool Withdraw()
+        {
+            if (!ReadAccountIndex("Ange kontonummer: ", out int accountIndex) ||
+                !ReadDecimal("Ange belopp: ", out decimal amount))
+                return true;
+
+            Console.Write("Ange PIN: ");
+            string? pinText = Console.ReadLine();
+            if (pinText == null)
+            {
+                _bank.Logout();
+                return false;
             }
 
-            Console.WriteLine("---------------------------------");
-            Console.WriteLine();
-            Console.WriteLine("Press ENTER to continue.");
-            Console.ReadLine();
+            TransactionResult result = _bank.Withdraw(amount, accountIndex, pinText);
+            Console.WriteLine(ErrorHandling.GetTransactionMessage(result));
+            SaveAfterSuccess(result);
+            // A locked account ends the session and returns to login in Program.
+            if (result == TransactionResult.UserLocked)
+            {
+                _bank.Logout();
+                return false;
+            }
+            return true;
+        }
+
+        private void Transfer()
+        {
+            if (!ReadAccountIndex("Från konto: ", out int fromIndex) ||
+                !ReadAccountIndex("Till konto: ", out int toIndex) ||
+                !ReadDecimal("Ange belopp: ", out decimal amount))
+                return;
+
+            TransactionResult result = _bank.Transfer(fromIndex, toIndex, amount);
+            Console.WriteLine(ErrorHandling.GetTransactionMessage(result));
+            SaveAfterSuccess(result);
+        }
+
+        private bool ReadAccountIndex(string prompt, out int accountIndex)
+        {
+            if (!ReadInt(prompt, out int displayedNumber))
+            {
+                accountIndex = -1;
+                return false;
+            }
+
+            // Convert the displayed account number to the service's zero-based index.
+            accountIndex = displayedNumber - 1;
+            return true;
+        }
+
+        private bool ReadInt(string prompt, out int value)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string? input = Console.ReadLine();
+                if (input == null)
+                {
+                    _bank.Logout();
+                    value = 0;
+                    return false;
+                }
+                if (int.TryParse(input, out value))
+                    return true;
+
+                Console.WriteLine("Ange ett giltigt heltal.");
+            }
+        }
+
+        private bool ReadDecimal(string prompt, out decimal value)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string? input = Console.ReadLine();
+                if (input == null)
+                {
+                    _bank.Logout();
+                    value = 0;
+                    return false;
+                }
+                if (decimal.TryParse(input, out value))
+                    return true;
+
+                Console.WriteLine("Ange ett giltigt belopp.");
+            }
+        }
+
+        private void SaveAfterSuccess(TransactionResult result)
+        {
+            // Save only after the bank service confirms a successful transaction.
+            if (result == TransactionResult.SuccessfulTransaction)
+                _dataHandling.Save(_users);
         }
     }
 }
