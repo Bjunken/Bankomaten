@@ -26,8 +26,8 @@ namespace Bankomaten
             string username = Console.ReadLine();
 
             loggedInUser = users.Find(u => u.UserName == username);
-            if (loggedInUser == null)
-            {
+                if (loggedInUser == null)
+                {
                 Console.WriteLine("Unknown user.");
                 continue; //returns to the beginning of the loop to ask for username again.
                 }

@@ -12,7 +12,7 @@ namespace Bankomaten.Service {
         I've, (Linus), done some research on DateTime and OOP structure, and in order to create the pin-fail lock, we need to redo this class.
         This is on me, as I underrestimated the task, so I will try and comment-guide as much as I can in here.
     */
-
+    // This class handles validation needed by the UI flow.
     public class ValidationHelper
     {
         public bool VerifyPin(User user, int enteredPin)
