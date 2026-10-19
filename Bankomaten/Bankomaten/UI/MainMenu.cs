@@ -19,7 +19,7 @@ namespace Bankomaten.UI
 
         public void ShowMenu()
         {
-            // Keep showing the menu until BankService has no signed-in user.
+            // Main menu shows after a successful login.
             while (_bank.IsLoggedIn())
             {
                 Console.WriteLine("=================================");
@@ -193,7 +193,7 @@ namespace Bankomaten.UI
 
         private void SaveAfterSuccess(TransactionResult result)
         {
-            // Save only after the bank service confirms a successful transaction.
+            // Press Enter to continue after a successful transaction, and save the user data.
             if (result == TransactionResult.SuccessfulTransaction)
                 _dataHandling.Save(_users);
             Console.WriteLine("tryck Enter till att fortsätta");
