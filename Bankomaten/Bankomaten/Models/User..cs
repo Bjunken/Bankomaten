@@ -21,13 +21,9 @@ namespace Bankomaten.Models
         private int PinTries;
         private DateTime? LockedAt;
 
-<<<<<<< HEAD
         // Do not save the lock status; users are unlocked after a restart.
         [JsonIgnore]
         public bool IsLocked
-=======
-        [JsonIgnore]public bool IsLocked
->>>>>>> a3e59978d3dc86e706fc7dfa3a6265f950508f0e
         {
             get
             {

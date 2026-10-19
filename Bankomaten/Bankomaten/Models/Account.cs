@@ -40,12 +40,12 @@ namespace Bankomaten.Models  {
         {
             private static readonly string[] AccountNames =
             {
-            "Salaryaccount",
-            "Savingsaccount",
-            "Vacationaccount",
-            "InvestmentAccount",
-            "EmergencyFund",
-            "BillsAccount"            
+            "Salary Account",
+            "Savings Account",
+            "Vacation Account",
+            "Investment Account",
+            "Emergency Fund",
+            "Bills Account"            
             };
 
             public static List<Account> GenerateAccounts()
