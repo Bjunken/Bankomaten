@@ -31,7 +31,7 @@ namespace Bankomaten.UI
                 if (result == LoginResult.SuccessfulLogin)
                     return true;
 
-                Console.WriteLine("Press Enter to try again.");
+                Console.WriteLine("tryck Enter för att försöka igen");
                 Console.ReadLine();
                 Console.Clear();
             }

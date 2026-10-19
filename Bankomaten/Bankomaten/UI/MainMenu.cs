@@ -26,12 +26,14 @@ namespace Bankomaten.UI
                 Console.WriteLine("        SYNTAX BANKEN MENY");
                 Console.WriteLine("=================================");
                 Console.WriteLine();
-                Console.WriteLine("[1] Visa konton");
-                Console.WriteLine("[2] Kontrollera saldo");
-                Console.WriteLine("[3] Sätta in pengar");
-                Console.WriteLine("[4] Ta ut pengar");
-                Console.WriteLine("[5] Överföra pengar");
-                Console.WriteLine("[6] Logga ut");
+                Console.WriteLine("Konton och saldo:");
+                ShowAccounts();
+                Console.WriteLine();
+                Console.WriteLine("Välj ett alternativ:");
+                Console.WriteLine("[1] Sätta in pengar");
+                Console.WriteLine("[2] Ta ut pengar");
+                Console.WriteLine("[3] Överföra pengar");
+                Console.WriteLine("[4] Logga ut");
 
                 if (!ReadInt("Välj alternativ: ", out int choice))
                 {
@@ -40,26 +42,21 @@ namespace Bankomaten.UI
                 }
 
                 Console.Clear();
+
+                ShowAccounts();
                 switch (choice)
                 {
                     case 1:
-                        ShowAccounts();
-                        break;
-
-                    case 2:
-                        CheckBalance();
-                        break;
-                    case 3:
                         Deposit();
                         break;
-                    case 4:
+                    case 2:
                         if (!Withdraw())
                             return;
                         break;
-                    case 5:
+                    case 3:
                         Transfer();
                         break;
-                    case 6:
+                    case 4:
                         _bank.Logout();
                         return;
                     default:
@@ -199,6 +196,9 @@ namespace Bankomaten.UI
             // Save only after the bank service confirms a successful transaction.
             if (result == TransactionResult.SuccessfulTransaction)
                 _dataHandling.Save(_users);
+            Console.WriteLine("tryck Enter till att fortsätta");
+            Console.ReadLine();
+            Console.Clear();
         }
     }
 }
