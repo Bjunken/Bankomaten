@@ -1,21 +1,27 @@
 using Bankomaten.Models;
 using Bankomaten.Service;
 using Bankomaten.Utils;
+using System.Security.Principal;
 
-namespace Bankomaten.UI {
-    internal class MainMenu {
+namespace Bankomaten.UI
+{
+    internal class MainMenu
+    {
         private readonly BankService _bank;
         private readonly List<User> _users;
         private readonly DataHandling _dataHandling;
         private int _menuChoice;
-        public MainMenu(BankService bank, List<User> users, DataHandling dataHandling) {
+        public MainMenu(BankService bank, List<User> users, DataHandling dataHandling)
+        {
             _bank = bank;
             _users = users;
             _dataHandling = dataHandling;
         }
-        public void ShowMenu() {
+        public void ShowMenu()
+        {
             // Main menu shows after a successful login.
-            while (_bank.IsLoggedIn()) {
+            while (_bank.IsLoggedIn())
+            {
                 header();
                 Console.WriteLine("Konto Översikt");
                 showAccounts();
@@ -30,17 +36,19 @@ namespace Bankomaten.UI {
                 menuInputCheck(userInput);
                 Console.Clear();
 
-                switch (_menuChoice) {
+                switch (_menuChoice)
+                {
                     case 1:
                         deposit();
                         Console.Clear();
                         break;
                     case 2:
-                        //if (!Withdraw())
-                            return;
+                        withdraw();
+                        Console.Clear();
                         break;
                     case 3:
-                        //Transfer();
+                        transfer();
+                        Console.Clear();
                         break;
                     case 4:
                         _bank.Logout();
@@ -51,38 +59,48 @@ namespace Bankomaten.UI {
                 }
             }
         }
-        private void showAccounts() {
+        private void showAccounts()
+        {
             if (_bank.CurrentUser is not User user)
                 return;
-            for (int i = 0; i < user.Accounts.Count; i++) {
+            for (int i = 0; i < user.Accounts.Count; i++)
+            {
                 var account = user.Accounts[i];
                 Console.WriteLine($"{i + 1}. {account.AccountName}: {account.Balance:C}");
             }
         }
-        private void header() {
+        private void header()
+        {
             Console.WriteLine("=================================");
             Console.WriteLine("        SYNTAX BANKEN MENY");
             Console.WriteLine("=================================");
             Console.WriteLine();
         }
-        private void menuInputCheck(string input) {
-            if (!int.TryParse(input, out int userInput)) {
+        private void menuInputCheck(string input)
+        {
+            if (!int.TryParse(input, out int userInput))
+            {
                 _menuChoice = 0;
             }
-            else {
+            else
+            {
                 _menuChoice = userInput;
             }
         }
-        private decimal? parseDecimalCheck(string input) {
-            if (decimal.TryParse(input, out decimal result)) {
+        private decimal? parseDecimalCheck(string input)
+        {
+            if (decimal.TryParse(input, out decimal result))
+            {
                 return result;
             }
             return null;
         }
-        private Account? accountInputCheck(string input) {
+        private Account? accountInputCheck(string input)
+        {
             // Parsing
             int? accountNumber = parseCheck(input);
-            if (accountNumber == null) {
+            if (accountNumber == null)
+            {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("\nFel: ");
                 Console.ResetColor();
@@ -93,7 +111,8 @@ namespace Bankomaten.UI {
             int listIndex = accountNumber.Value - 1;
 
             // checking if the index actually exsists
-            if (listIndex < 0 || listIndex >= _bank.CurrentUser.Accounts.Count) {
+            if (listIndex < 0 || listIndex >= _bank.CurrentUser.Accounts.Count)
+            {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("\nFel: ");
                 Console.ResetColor();
@@ -102,15 +121,20 @@ namespace Bankomaten.UI {
             }
             return _bank.CurrentUser.Accounts[listIndex];
         }
-        private int? parseCheck(string input) {
-            if (int.TryParse(input, out int result)) {
+        private int? parseCheck(string input)
+        {
+            if (int.TryParse(input, out int result))
+            {
                 return result;
-            } else {return null;}
+            }
+            else { return null; }
         }
-        private void deposit() {
+        private void deposit()
+        {
             bool transactionFinished = false;
 
-            while (!transactionFinished) {
+            while (!transactionFinished)
+            {
                 Console.Clear();
                 header();
                 Console.WriteLine("=== INSÄTTNING ===");
@@ -127,7 +151,8 @@ namespace Bankomaten.UI {
                 Account? chosenAccount = accountInputCheck(accountInput);
 
                 // if it was null, return a error message
-                if (chosenAccount == null) {
+                if (chosenAccount == null)
+                {
                     Console.ReadKey();
                     continue; // just continues the loop
                 }
@@ -143,7 +168,8 @@ namespace Bankomaten.UI {
 
                 // parsing the amount into decimal
                 decimal? amount = parseDecimalCheck(amountInput);
-                if (amount == null || amount <= 0) {
+                if (amount == null || amount <= 0)
+                {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write("\nFel: ");
                     Console.ResetColor();
@@ -155,7 +181,8 @@ namespace Bankomaten.UI {
                 TransactionResult result = _bank.Deposit(amount.Value, accountIndex);
 
                 // then we check back on the result of the validation
-                switch (result) {
+                switch (result)
+                {
                     case TransactionResult.SuccessfulTransaction:
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"\nInsättning lyckades! {amount.Value:C} har satts in på {chosenAccount.AccountName}.");
@@ -183,11 +210,204 @@ namespace Bankomaten.UI {
             Console.WriteLine("\nTryck på valfri tangent för att återgå till huvudmenyn...");
             Console.ReadKey();
         }
-        private void withdraw() {
-            // Kristin
+        private void withdraw()
+        {
+            bool transactionFinished = false;
+
+            while (!transactionFinished)
+            {
+                Console.Clear();
+                header();
+                Console.WriteLine("=== UTTAG ===");
+                Console.WriteLine("Dina konton:");
+                showAccounts();
+                Console.WriteLine();
+                Console.WriteLine("(Skriv '0' för att avbryta)");
+                Console.Write("Ange Konto (siffra): ");
+
+                string accountInput = Console.ReadLine();
+                if (accountInput == "0") return; // <- Will cancel / go back to main menu
+
+                // converting input to account index
+                Account? chosenAccount = accountInputCheck(accountInput);
+
+                // if it was null, return an error message
+                if (chosenAccount == null)
+                {
+                    Console.ReadKey();
+                    continue; // just continues the loop
+                }
+
+                // collecting the index from bankservice
+                int accountIndex = _bank.CurrentUser.Accounts.IndexOf(chosenAccount);
+
+                Console.WriteLine($"Valt konto: {chosenAccount.AccountName}");
+                Console.Write("Belopp att ta ut: ");
+
+                string amountWithdrawal = Console.ReadLine();
+                if (amountWithdrawal == "0") return; // <- will cancel / go back to the main menu
+
+                // parsing the amount into decimal
+                decimal? amount = parseDecimalCheck(amountWithdrawal);
+                if (amount == null || amount <= 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("\nFel: ");
+                    Console.ResetColor();
+                    Console.Write("Beloppet måste vara en summa över 0 kr.");
+                    Console.ReadKey();
+                    continue;
+                }
+                // send it off to bankservice for the actual withdrawal
+                string pinText = null;
+                Console.Write("Ange PIN kod: ");
+                pinText = Console.ReadLine();
+                TransactionResult result = _bank.Withdraw(amount.Value, accountIndex, pinText);
+
+                // then we check back on the result of the validation
+                switch (result)
+                {
+                    case TransactionResult.SuccessfulTransaction:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"\nUttaget lyckades! {amount.Value:C} har tagits ut från {chosenAccount.AccountName}.");
+                        Console.ResetColor();
+                        transactionFinished = true;
+                        break;
+
+                    case TransactionResult.NonLoggedIn:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nFel: ");
+                        Console.ResetColor();
+                        Console.Write("Du är inte inloggad.");
+                        transactionFinished = true;
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nFel: ");
+                        Console.ResetColor();
+                        Console.Write("Transaktionen misslyckades.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+            Console.WriteLine("\nTryck på valfri tangent för att återgå till huvudmenyn...");
+            Console.ReadKey();
+
         }
-        private void transfer() {
-            // Martin
+        private void transfer()
+        {
+            bool transactionFinished = false;
+
+            while (!transactionFinished)
+            {
+                Console.Clear();
+                header();
+                Console.WriteLine("=== Överföring ===");
+                Console.WriteLine("Dina konton:");
+                showAccounts();
+                Console.WriteLine();
+                Console.WriteLine("(Skriv '0' för att avbryta)");
+                Console.Write("Ange kontot du vill överföra från: ");
+
+                string _fromAccount = Console.ReadLine();
+                if (_fromAccount == "0")
+                {
+                    return;
+                }
+
+                Account? fromAccount = accountInputCheck(_fromAccount);
+
+                if (fromAccount == null)
+                {
+                    Console.ReadKey();
+                    continue;
+                }
+
+                int fromIndex = _bank.CurrentUser.Accounts.IndexOf(fromAccount);
+                Console.WriteLine($"Valt konto: {fromAccount.AccountName}");
+                Console.Write("Ange konto du vill överföra till: ");
+
+                string _toAccount = Console.ReadLine();
+                if (_toAccount == "0")
+                {
+                    return;
+                }
+
+                Account? toAccount = accountInputCheck(_toAccount);
+
+                if (toAccount == null)
+                {
+                    Console.ReadKey();
+                    continue;
+                }
+
+                int toIndex = _bank.CurrentUser.Accounts.IndexOf(toAccount);
+                Console.WriteLine($"Valt konto: {toAccount.AccountName}");
+                Console.Clear();
+                header();
+                Console.WriteLine("=== Överföring ===");
+                Console.WriteLine("Dina konton:");
+                showAccounts();
+                Console.WriteLine();
+                Console.WriteLine($"Överför från {fromAccount.AccountName} till {toAccount.AccountName} ");
+                Console.Write("Ange vilket belopp du vill överföra: ");
+
+                string amountInput = Console.ReadLine();
+                if (amountInput == "0")
+                {
+                    return;
+                }
+
+                decimal? amount = parseDecimalCheck(amountInput);
+                if (amount == null || amount <= 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("\nFel: ");
+                    Console.ResetColor();
+                    Console.Write("Beloppet måste vara ett giltigt nummer över 0 kr.");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                TransactionResult result = _bank.Transfer(fromIndex, toIndex, amount.Value);
+
+                switch (result)
+                {
+                    case TransactionResult.SuccessfulTransaction:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"\nÖverföring lyckades! {amount.Value:C} har tagits ut från {fromAccount.AccountName} överförts till {toAccount.AccountName}.");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                        transactionFinished = true;
+                        break;
+
+                    case TransactionResult.NonLoggedIn:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nFel: ");
+                        Console.ResetColor();
+                        Console.Write("Du är inte inloggad.");
+                        Console.ReadKey();
+                        transactionFinished = true;
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nFel: ");
+                        Console.ResetColor();
+                        Console.Write("Transaktionen misslyckades.");
+                        Console.ReadKey();
+                        break;
+                }
+
+
+            }
+            
         }
+           
     }
 }
+
+
+
+
