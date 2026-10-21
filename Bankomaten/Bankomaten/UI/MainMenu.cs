@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Bankomaten.Models;
+using Bankomaten.Service;
+using Bankomaten.Utils;
 
 namespace Bankomaten.UI {
     internal class MainMenu {
-<<<<<<< Updated upstream
-
-=======
         private readonly BankService _bank;
         private readonly List<User> _users;
         private readonly DataHandling _dataHandling;
@@ -192,6 +189,5 @@ namespace Bankomaten.UI {
         private void transfer() {
             // Martin
         }
->>>>>>> Stashed changes
     }
 }

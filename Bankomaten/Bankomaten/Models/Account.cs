@@ -41,21 +41,12 @@ namespace Bankomaten.Models  {
         {
             private static readonly string[] AccountNames =
             {
-<<<<<<< Updated upstream
-            "Salaryaccount",
-            "Savingsaccount",
-            "Vacationaccount",
-            "InvestmentAccount",
-            "EmergencyFund",
-            "BillsAccount"            
-=======
             "Lönekonto",
             "Sparkonto",
             "Semesterkonto",
             "Investeringskonto",
             "Buffertkonto",
             "Räkningskonto"            
->>>>>>> Stashed changes
             };
 
             public static List<Account> GenerateAccounts()

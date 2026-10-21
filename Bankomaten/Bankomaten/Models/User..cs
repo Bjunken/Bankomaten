@@ -20,7 +20,9 @@ namespace Bankomaten.Models
         private int PinTries;
         private DateTime? LockedAt;
 
-        [JsonIgnore]public bool IsLocked
+        // Do not save the lock status; users are unlocked after a restart.
+        [JsonIgnore]
+        public bool IsLocked
         {
             get
             {
@@ -53,8 +55,6 @@ namespace Bankomaten.Models
             if (PinTries >= 3)
             {
                 LockedAt = DateTime.Now;
-               
-                Console.WriteLine("Too many failed attempts. Your account is locked for 30 seconds."); // Remove when all done in UI.
             }
             return false;
         }
