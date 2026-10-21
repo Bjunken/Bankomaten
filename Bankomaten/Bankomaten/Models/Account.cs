@@ -17,6 +17,7 @@ namespace Bankomaten.Models  {
             AccountName = accountName;
             Balance = balance;
         }
+        //A bool that makes sure that the deposit and withdraw methods don't accept negative values and that the withdraw method doesn't allow withdrawing more than the balance.
         public bool Deposit(decimal amount)
         {
             if (amount <= 0)
@@ -35,17 +36,17 @@ namespace Bankomaten.Models  {
             Balance -= amount;
             return true;
         }
-
+        //A factory class to generate random accounts for users.
         public static class AccountFactory
         {
             private static readonly string[] AccountNames =
             {
-            "Salary Account",
-            "Savings Account",
-            "Vacation Account",
-            "Investment Account",
-            "Emergency Fund",
-            "Bills Account"            
+            "Lönekonto",
+            "Sparkonto",
+            "Semesterkonto",
+            "Investeringskonto",
+            "Buffertkonto",
+            "Räkningskonto"            
             };
 
             public static List<Account> GenerateAccounts()

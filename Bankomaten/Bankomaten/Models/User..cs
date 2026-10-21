@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
+using System.Text.Json.Serialization; //Activate saving and loading of private properties in the User class, like PinCode.
 
 namespace Bankomaten.Models
 {
@@ -14,8 +14,7 @@ namespace Bankomaten.Models
     public class User
     {
         public string UserName { get; }
-        // Save the PIN in JSON; failed attempts and lock duration only exist for this run.
-        [JsonInclude]private int PinCode { get; }
+        [JsonInclude]private int PinCode { get; } //This property is private and can only be accessed within the User class. It is used to store the user's PIN code for authentication purposes.
         public List<Account> Accounts { get; }
         
         private int PinTries;
@@ -39,6 +38,7 @@ namespace Bankomaten.Models
             PinCode = pinCode;
             Accounts = accounts;
         }
+        // This method checks if the entered pin is correct and handles the logic for locking the account after 3 failed attempts.
         public bool CheckPin(int enteredPin)
         {
             if (IsLocked)
@@ -58,6 +58,7 @@ namespace Bankomaten.Models
             }
             return false;
         }
+        // This method resets the pin tries and unlocks the account.
         private void ResetPinTries()
         {
             PinTries = 0;
