@@ -169,6 +169,7 @@ namespace Bankomaten.UI
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"\nInsättning lyckades! {amount.Value:C} har satts in på {chosenAccount.AccountName}.");
                         Console.ResetColor();
+                        _dataHandling.Save(_users);
                         transactionFinished = true;
                         break;
 
@@ -192,90 +193,7 @@ namespace Bankomaten.UI
             Console.WriteLine("\nTryck på valfri tangent för att återgå till huvudmenyn...");
             Console.ReadKey();
         }
-        private void withdraw()
-        {
-            bool transactionFinished = false;
-
-            while (!transactionFinished)
-            {
-                Console.Clear();
-                header();
-                Console.WriteLine("=== UTTAG ===");
-                Console.WriteLine("Dina konton:");
-                showAccounts();
-                Console.WriteLine();
-                Console.WriteLine("(Skriv '0' för att avbryta)");
-                Console.Write("Ange Konto (siffra): ");
-
-                string accountInput = Console.ReadLine();
-                if (accountInput == "0") return; // <- Will cancel / go back to main menu
-
-                // converting input to account index
-                Account? chosenAccount = accountInputCheck(accountInput);
-
-                // if it was null, return an error message
-                if (chosenAccount == null)
-                {
-                    Console.ReadKey();
-                    continue; // just continues the loop
-                }
-
-                // collecting the index from bankservice
-                int accountIndex = _bank.CurrentUser.Accounts.IndexOf(chosenAccount);
-
-                Console.WriteLine($"Valt konto: {chosenAccount.AccountName}");
-                Console.Write("Belopp att ta ut: ");
-
-                string amountWithdrawal = Console.ReadLine();
-                if (amountWithdrawal == "0") return; // <- will cancel / go back to the main menu
-
-                // parsing the amount into decimal
-                decimal? amount = parseDecimalCheck(amountWithdrawal);
-                if (amount == null || amount <= 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("\nFel: ");
-                    Console.ResetColor();
-                    Console.Write("Beloppet måste vara en summa över 0 kr.");
-                    Console.ReadKey();
-                    continue;
-                }
-                // send it off to bankservice for the actual withdrawal
-                string pinText = null;
-                Console.Write("Ange PIN kod: ");
-                pinText = Console.ReadLine();
-                TransactionResult result = _bank.Withdraw(amount.Value, accountIndex, pinText);
-
-                // then we check back on the result of the validation
-                switch (result)
-                {
-                    case TransactionResult.SuccessfulTransaction:
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"\nUttaget lyckades! {amount.Value:C} har tagits ut från {chosenAccount.AccountName}.");
-                        Console.ResetColor();
-                        transactionFinished = true;
-                        break;
-
-                    case TransactionResult.NonLoggedIn:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("\nFel: ");
-                        Console.ResetColor();
-                        Console.Write("Du är inte inloggad.");
-                        transactionFinished = true;
-                        break;
-
-                    default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("\nFel: ");
-                        Console.ResetColor();
-                        Console.Write("Transaktionen misslyckades.");
-                        Console.ReadKey();
-                        break;
-                }
-            }
-            Console.WriteLine("\nTryck på valfri tangent för att återgå till huvudmenyn...");
-            Console.ReadKey();
-        }
+        
         // Only difference between deposit and withdraw is that withdraw requires a pin code, so we will ask for it here
         private void withdraw() {
             bool transactionFinished = false;
@@ -332,6 +250,7 @@ namespace Bankomaten.UI
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"\nUttaget lyckades! {amount.Value:C} har tagits ut från {chosenAccount.AccountName}.");
                         Console.ResetColor();
+                        _dataHandling.Save(_users);
                         transactionFinished = true;
                         break;
 
@@ -441,6 +360,7 @@ namespace Bankomaten.UI
                         Console.WriteLine($"\nÖverföring lyckades! {amount.Value:C} har tagits ut från {fromAccount.AccountName} överförts till {toAccount.AccountName}.");
                         Console.ResetColor();
                         Console.ReadKey();
+                        _dataHandling.Save(_users);
                         transactionFinished = true;
                         break;
 

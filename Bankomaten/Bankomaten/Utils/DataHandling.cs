@@ -5,43 +5,43 @@ namespace Bankomaten.Utils
 {
     internal class DataHandling
     {
-        // Load and Save use the same file path.
-        private static readonly string FilePath = Path.Combine("Data", "accounts.json");
-        private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
-
-        public List<User> Load()
-        {
-            // Start with an empty list on the first run instead of failing.
+        // saves the file in the data folder / sets paths
+        private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "Data", "accounts.json");
+        public List<User> Load() {
+            // checks if file exists / if not create one.
             if (!File.Exists(FilePath))
                 return new List<User>();
 
-            try
-            {
+            /*
+            try / catch for checking if there are any users in the file if not, creates an empty list of users.
+            If empty, throws an exception error message.
+            */
+            try {
                 string json = File.ReadAllText(FilePath);
-                return JsonSerializer.Deserialize<List<User>>(json, JsonOptions) ?? new List<User>();
+                List<User>? users = JsonSerializer.Deserialize<List<User>>(json);
+
+                if (users == null) {
+                    return new List<User>();
+                }
+                return users;
             }
-            // A broken file or read error should not stop the program.
-            catch (JsonException)
-            {
-                Console.WriteLine("Kontofilen innehåller ogiltig JSON. Startar med en tom användarlista.");
-                return new List<User>();
-            }
-            catch (IOException)
-            {
-                Console.WriteLine("Kontofilen kunde inte läsas. Startar med en tom användarlista.");
+            catch (Exception) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Fel: ");
+                Console.ResetColor();
+                Console.Write("Kunde inte läsa kontofilen. Startar med en tom användarlista.");
                 return new List<User>();
             }
         }
 
-        public void Save(List<User> users)
-        {
-            // Create the Data folder automatically before writing accounts.
-            string? directory = Path.GetDirectoryName(FilePath);
-            if (!string.IsNullOrEmpty(directory))
-                Directory.CreateDirectory(directory);
+        public void Save(List<User> users) {
+            // checks / creates the data folder if it doesn't exists
+            Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
 
-            // Serialize the existing User and Account models as readable JSON.
-            string json = JsonSerializer.Serialize(users, JsonOptions);
+            // serializes / saves the file back to Json with indented options for the Json format
+            var options = new JsonSerializerOptions { WriteIndented = true};
+
+            string json = JsonSerializer.Serialize(users, options);
             File.WriteAllText(FilePath, json);
         }
     }
