@@ -97,14 +97,14 @@ Sedan har vi ett vecko-satt avstämningsmöte där vi går igenom vad som gjorts
 - Linus, projektledare
 - Kristin, Kodare
 - Martin, Kodare
-- William, Kodare
+- ~~William, Kodare~~
 
 ### Roller
 
 - **Linus:** projektledare och ansvarig för repot och kommunikation, samt hjälp och stöd vid behov. Fördelar även uppgifterna, och ansvarar för Program.cs / ErrorMessages.cs.
 - **Kristin:** hantear block B, vilket är Models + Validering. (User.cs / Account.cs / ValidationHelper.cs).
 - **Martin:** Ansvarar för block C, vilket service logik, (BankService.cs och AccountService.cs).
-- **William:** Har hand om block D, som här UI + Json, (LgoinMenu.cs / MainMenu.cs / DataHandling.cs).
+- ~~**William:** Har hand om block D, som här UI + Json, (LgoinMenu.cs / MainMenu.cs / DataHandling.cs).~~
 
 ### Fördelning av uppgifter
 
@@ -163,15 +163,39 @@ AccountService.cs
 - [x] Call `Account.Deposit()` / `Withdraw()` instead of duplicating balance logic
 - [x] `Transfer` checks everything first (indexes, same account, amount, funds), so one account can never change alone
 - [x] No UI logic and no PIN logic (the PIN check lives in `BankService`)
- 
-## Reflektion
 
-### Motivering av lösningen
+Block D
+Linus/Kristin/Martin CHECKLIST: (Klar)
+(lägg till block d checklista sen)
+## Reflektion
+Under vårt första möte ställdes frågan vad alla vara intresserad av att göra i projektet, sedan vilka roller som var av intresse. Jag, (Linus), blev snabbt vald som projektledare och Kristin var intresserad av User och Account delen, medan Martin var intresserad av bank logiken, samt William som var intresserad av UI. Efter det var satt, byggde vi upp en logik flow-chart för att få en visuell representation av programmet. Utifrån det fick jag, (Linus), i uppgift att planera och strukturera projektet, samt fördela arbetsuppgifter.
+
+Planeringen av strukturen gick till så att, jag försökte hålla projektet så kompakt som möjligt, samt bygga upp det i byggstenar, där vi aldrig behövde röra varandras filer. I GitHub gjordes individuella branches som alla gick till en test branch, som vidare gick tillbaka till de individuella branches eller till vår main branch, vilket skulle leda till lättare ihop sättning, samt smidigare arbetsflöde eftersom vi inte behövde arbeta samtidigt och varje individ fick en veckas deadline. Tanken bakom det var att vi skulle ha så lite press som möjligt och mycket tid för att kunna ge stöd till varandra och bygga upp projektet i en bra takt.
+
+Utöver strukturen av projektet, hade vi ett avstämnings möte varje vecka där individien vars deadline gick ut, fick redovisa sin kod för gruppen och sedan gick vi igenom vad som ska göras efter. Sedan hade vi även individuell avstämning med projekledaren varje torsdag, där man stämnde av vad man gjort eller planerat göra tills deadline dagen.
+
+### Hur Var Det att Arbeta i Gruppen & med Uppgifterna?
+**Linus**
+
+
+**Kristin**
+Det har varit en bra känsla i gruppen hela tiden. vi har kunnat fråga fritt utan att känna sig "dum" eller okunnig. bra feedback vid frågor eller funderingar. alla har getts chansen att fråga/komma till tals under gruppmöten.
+**förbättring:**
+kunde haft fler gruppmöten för att tillsammans diskutera kod och rubberducka mellan varandra för att lära oss än mer av varandra samt förstå upplägg av projektet och de olika delarna i det.
+
+**Martin**
+Stöttningen har varit bra, man har blivit bra bemött när man har bett om hjälp och gruppen har varit öppen för att hjälpa till. Även om man själv kanske har känt sig lite dum när man kört fast vid något tillfälle så har man fått stöttning och blivit peppad och påmind om att vi faktiskt fortfarande är nybörjare. Tycker det har varit bra upplägg där vi had Linus som blev projektledare som har kunnat stötta oss och vi andra har fått våra delar vi har haft ansvar över och end tydlig tidsplan. Varit bra med att både ha veckoavstämningar och individuella avsämningar med projektledaren.
+Fått tydlig feedback hur man kan förbättra och göra om i koden för att följa hur det är tänkt att vi skulle strukturera koden.  Det kan vara lite svårt ibland när man har sin egen tanke kring hur det ska vara uppbyggt, men eftersom man fått bra feedback har det inte varit allt för svårt att redigera efter hur projektledaren hade sin tanke kring strukturen.
+På slutet körde vi även lite par kodningen vilket jag tyckte var väldigt lärorikt och effektivt för att fånga upp fel.
+**förbättring:**
+kunde haft fler gruppmöten för att tillsammans diskutera kod och rubberducka mellan varandra för att lära oss än mer av varandra samt förstå upplägg av projektet och de olika delarna i det.
 
 ### Övervägda alternativ
 
-### Kritisk granskning och förbättringar
+### Kritisk Granskning av Kod och Förbättringar
 
 ### Val av datastrukturer
-
+Vi valde att använda en Array, som innehåller kontonamn i ett fält. Tanken bakom det var att göra projketet så okompliserat som möjligt.
+Sedan valde vi att använda List för att hålla våra konton och saldon eftersom det underlättade inte bara skapandet men återanvändning av dem med uppackning av listorna.  
 ### Klassindelning
+Klasserna har delats in utöver arbetsuppgifterna och fördelning av projektet utifrån det som alla medlemmar var intresserade av att arbeta med, samt att försöka hålla projektet inom OOP-ramen som vi kunde.
