@@ -1,76 +1,49 @@
-﻿using Bankomaten.Models;
+using Bankomaten.Models;
 using Bankomaten.Service;
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Reflection.Metadata;
-using static Bankomaten.Models.Account;
-
-namespace Bankomaten.UI 
-{
-    internal class LoginMenu 
-    {
-        /* This method is from User.cs. I will remove the Console.Write and string username from my code
-          when you say that you are done here.
-         */
-        public void showloginmenu()
-        {
-
-            Console.WriteLine("=================================");
-            Console.WriteLine("       WELCOME TO SYNTAX BANK");
-            Console.WriteLine("=================================");
-            Console.WriteLine();
-
-            //Console.Write("Username: ");
-            //string username = Console.ReadLine();
-
-            //loggedInUser = users.Find(u => u.UserName == username);
-            //if (loggedInUser == null)
-            //{
-            //    Console.WriteLine("Unknown user.");
-            //    continue; //returns to the beginning of the loop to ask for username again.
-            //}
-            ////Pin-validation
-
-            //if (loggedInUser.IsLocked)
-            //{
-            //    Console.WriteLine("Your account is locked. Please try again later.");
-            //    continue; //returns to the beginning of the loop to ask for username again.
-            //}
-            //Console.Write("Enter PIN: ");
-            //if (!int.TryParse(Console.ReadLine(), out int enteredPin))
-            //{
-            //    Console.WriteLine("Invalid PIN format. Please enter a numeric PIN.");
-            //    continue;
-            //}
-            //var validator = new ValidationHelper();
-            //bool isValid = validator.VerifyPin(loggedInUser, enteredPin);
-
-            //if (!isValid)
-            //{
-            //    continue;
-            //}
-            //break; // Exit the loop after successful login and account display                          
-
-
-        }
-        //Logged in successfully
+using Bankomaten.Utils;
+using System.Threading;
+namespace Bankomaten.UI {
+   
+    internal class LoginMenu {
+        private LoginResult result;
+        public bool ShowLoginMenu(BankService bank) {
+            Console.Title = "SyntaxSquad Banken";
+            // Continues until a successful login or the user cancels the login process
+            while (true) {
+                Console.WriteLine("===========================================");
+                Console.WriteLine("    VÄLKOMMEN TILL SYNTAXSQUAD BANKEN");
+                Console.WriteLine("===========================================");
+                Console.Write("Användarnamn: ");
+                string? userName = Console.ReadLine();
+                if (userName == null) { 
+                return false;
+                }
+                Console.Write("Ange PIN: ");
+                string? pinText = Console.ReadLine();
+                if (pinText == null) {
+                   return false;
+                }
+                // Pass the input to BankService for login validation
+                LoginResult result = bank.login(userName, pinText);
+                // If login is correct, display a green message during 2 seconds then enter mainmenu
+                if (result == LoginResult.SuccessfulLogin) {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(ErrorHandling.GetLoginMessage(result));
+                    Thread.Sleep(2000);
+                    Console.ResetColor();
+                    return true;                    
+                }
+                // If login fails, display a red message during 2 seconds then loop to the beginning of the while loop
+                else {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ErrorHandling.GetLoginMessage(result));
+                    Thread.Sleep(2000);
+                    Console.ResetColor();
+                }                
+                Console.WriteLine("Tryck Enter för att försöka igen");
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }       
     }
-
-    //public static User Login(User[] users)
-    //{
-    //    Console.Write("Username: ");
-    //    string username = Console.ReadLine(); William i UI
-
-    //    foreach (User user in users)
-    //    {
-    //        if (user.UserName == username)
-    //        {
-    //            return user;
-    //        }
-    //    }
-
-    //    return null;
 }
-

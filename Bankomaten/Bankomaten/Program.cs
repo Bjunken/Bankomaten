@@ -1,81 +1,47 @@
-﻿using Bankomaten.Models;
+using Bankomaten.Models;
 using Bankomaten.Service;
+using Bankomaten.UI;
 using Bankomaten.Utils;
-using System;
-using System.Collections.Generic;
 
-namespace Bankomaten
-{
+namespace Bankomaten {
+    internal class Program {
+        private static void Main(string[] args) {
+            DataHandling dataHandling = new DataHandling();
 
-    internal class Program
-    {
+            // loading in users from JSON and if JSON is empty, creates users
+            List<User> users = dataHandling.Load();
+            if (users.Count == 0) {
+                users = createInitialUsers();
+                dataHandling.Save(users);
+            }
 
-
-        static void Main(string[] args) 
-        {
-            
-
-            //Creates a list of users with their usernames, PINs, and accounts
-            List<User> users = new List<User>();
-
-            users.Add(new User("Linus", 1111, AccountFactory.GenerateAccounts()));
-            users.Add(new User("Kristin", 2222, AccountFactory.GenerateAccounts()));
-            users.Add(new User("William", 3333, AccountFactory.GenerateAccounts()));
-            users.Add(new User("Martin", 4444, AccountFactory.GenerateAccounts()));
-            users.Add(new User("Anas", 5555, AccountFactory.GenerateAccounts()));
-            //Login process
-            User loggedInUser = null;
-            while (true)
-            {
-                Console.Write("Username: ");
-                string username = Console.ReadLine();
-
-                loggedInUser = users.Find(u => u.UserName == username);
-                if (loggedInUser == null)
-                {
-                    Console.WriteLine("Unknown user.");
-                    continue; //returns to the beginning of the loop to ask for username again.
-                }
-                //Pin-validation
-
-                if (loggedInUser.IsLocked)
-                {
-                    Console.WriteLine("Your account is locked. Please try again later.");
-                    continue; //returns to the beginning of the loop to ask for username again.
-                }
-                Console.Write("Enter PIN: ");
-                if (!int.TryParse(Console.ReadLine(), out int enteredPin))
-                {
-                    new Account("Salaryaccount", 800)
-                })
-            };
-
-            // Same wiring order as the real program
+            // references to services
             ValidationHelper validationHelper = new ValidationHelper();
             AccountService accountService = new AccountService();
-            BankService bank = new BankService(users, validationHelper, accountService);
-
-            }
-            //Logged in successfully
+            BankService bankService = new BankService(users, validationHelper, accountService);
 
             LoginMenu loginMenu = new LoginMenu();
-            loginMenu.showloginmenu();
+            MainMenu mainMenu = new MainMenu(bankService, users, dataHandling);
 
-            Console.Clear();
-
-            MainMenu mainMenu = new MainMenu();
-            mainMenu.showMenu();
-
-    
-
-            Console.WriteLine("\nDone. Press Enter to exit.");
-            Console.ReadLine();
+            // program loop (Login -> Main Menu -> back to login if logged out)
+            while (true) {
+                bool loggedIn = loginMenu.ShowLoginMenu(bankService);
+                if (!loggedIn) {
+                    return;
+                }
+                Console.Clear();
+                mainMenu.showMenu();
+            }
         }
-
-        // Helper so the balance checks are one line each
-        static void PrintBalance(BankService bank, int index) {
-            TransactionResult result = bank.GetBalance(index, out decimal balance);
-            Console.WriteLine($"Balance [{index}]:      {result} / {balance}");
+        // method for creating the users
+        private static List<User> createInitialUsers() {
+            return new List<User> {
+                new User("Linus", 1111, Account.AccountFactory.generateAccounts()),
+                new User("Kristin", 2222, Account.AccountFactory.generateAccounts()),
+                new User("Martin", 3333, Account.AccountFactory.generateAccounts()),
+                new User("Anas", 4444, Account.AccountFactory.generateAccounts()),
+                new User("Osama", 5555, Account.AccountFactory.generateAccounts())
+            };
         }
     }
 }

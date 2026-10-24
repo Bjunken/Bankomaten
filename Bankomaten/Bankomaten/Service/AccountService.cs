@@ -5,111 +5,64 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Text;
 
-namespace Bankomaten.Service
-{
-    internal class AccountService
-    {
-        public bool TryGetAccount(User user, int accountIndex, out Account? account)
-        {
-            if (accountIndex < 0 || accountIndex >= user.Accounts.Count)
-            {
+namespace Bankomaten.Service {
+    internal class AccountService {
+        public bool tryGetAccount(User user, int accountIndex, out Account? account) {
+            if (accountIndex < 0 || accountIndex >= user.Accounts.Count) {
                 account = null;
                 return false;
             }
             account = user.Accounts[accountIndex];
             return true;
         }
-
-        public bool IsValidAmount(decimal amount)
-        { 
+        public bool isValidAmount(decimal amount) {
             return amount > 0;
         }
-
-
-        // Call upon the method from Account.cs to deposit the ammount and return for BankServices
-        public TransactionResult Deposit(User user, int accountIndex, decimal amount)
-        {
-            if (!TryGetAccount(user, accountIndex, out Account? account))
-            {
+        // call the deposit method from Account.cs and passes the amount, then returns to BankServices
+        public TransactionResult deposit(User user, int accountIndex, decimal amount) {
+            if (!tryGetAccount(user, accountIndex, out Account? account)) {
                 return TransactionResult.InvalidAccountIndex;
             }
-
-            if (!IsValidAmount(amount))
-            {
+            if (!isValidAmount(amount)) {
                 return TransactionResult.InvalidAmount;
             }
-            account!.Deposit(amount);
+            account!.deposit(amount);
             return TransactionResult.SuccessfulTransaction;
         }
-
-
-        // Call upon the method from Account.cs to withdraw the ammount and return for BankServices
-        public TransactionResult Withdraw(User user, int accountIndex, decimal amount)
-        {
-
-            if (!TryGetAccount(user, accountIndex, out Account? account))
-            {
+        // call the withdraw method from Account.cs and passes the amount, then returns to BankServices
+        public TransactionResult withdraw(User user, int accountIndex, decimal amount) {
+            if (!tryGetAccount(user, accountIndex, out Account? account)) {
                 return TransactionResult.InvalidAccountIndex;
             }
-
-            if (!IsValidAmount(amount))
-            {
+            if (!isValidAmount(amount)) {
                 return TransactionResult.InvalidAmount;
             }
-
-            if (account!.Balance < amount)
-            {
+            if (account!.Balance < amount) {
                 return TransactionResult.InsufficientFunds;
             }
-
-            account.Withdraw(amount);
+            account.withdraw(amount);
             return TransactionResult.SuccessfulTransaction;
         }
-
-
-        // Call upon the methods from Account.cs to withdraw and deposit the ammount and return for BankServices
-        public TransactionResult Transfer(User user, int fromIndex, int toIndex, decimal amount)
-        {
-            
-            if (!TryGetAccount(user, fromIndex, out Account? fromAccount))
-            {
+        // Call the transfer method from Account.cs to withdraw and deposit the amount, returns to BankServices
+        public TransactionResult transfer(User user, int fromIndex, int toIndex, decimal amount) {
+            if (!tryGetAccount(user, fromIndex, out Account? fromAccount)) {
                 return TransactionResult.InvalidAccountIndex;
             }
-
-            if (!TryGetAccount(user, toIndex, out Account? toAccount))
-            {
+            if (!tryGetAccount(user, toIndex, out Account? toAccount)) {
                 return TransactionResult.InvalidAccountIndex;
             }
-
-            if (fromIndex == toIndex) // Checks that the user does not withdraw and deposits to the same account
-            {
+            // Checks that the user does not withdraw and deposits to the same account
+            if (fromIndex == toIndex) { 
                 return TransactionResult.SameAccount;
-            }
-
-            if (!IsValidAmount(amount))
-            {
+            } 
+            if (!isValidAmount(amount)) {
                 return TransactionResult.InvalidAmount;
-            }
-
-            if (fromAccount!.Balance < amount)
-            {
+            } 
+            if (fromAccount!.Balance < amount) {
                 return TransactionResult.InsufficientFunds;
             }
-
-            fromAccount!.Withdraw(amount);
-            toAccount!.Deposit(amount);
-            return TransactionResult.SuccessfulTransaction;
-        }
-
-
-        public TransactionResult GetBalance(User user, int accountIndex, out decimal balance)
-        {
-            if (!TryGetAccount(user, accountIndex, out Account? account))
-            {
-                balance = 0;
-                return TransactionResult.InvalidAccountIndex;
-            }
-            balance = account!.Balance;
+            fromAccount!.withdraw(amount);
+            toAccount!.deposit(amount);
             return TransactionResult.SuccessfulTransaction;
         }
     }
