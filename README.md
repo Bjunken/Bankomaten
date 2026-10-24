@@ -166,7 +166,35 @@ AccountService.cs
 
 Block D
 Linus/Kristin/Martin CHECKLIST: (Klar)
-(lägg till block d checklista sen)
+LoginMenu.cs
+- [x] Show the login screen and read the username and PIN as plain strings
+- [x] Call `BankService.Login(userName, pinText)`, with no PIN parsing or login rules in the UI
+- [x] Show a message for every `LoginResult` through `ErrorHandling`
+- [x] Open `MainMenu` only after `SuccessfulLogin`, otherwise stay on the login screen
+- [x] Return to the login screen after logout
+
+MainMenu.cs
+- [x] Show the user's accounts and balances, and the options: Deposit, Withdraw, Transfer, Logout
+- [x] Return to the main menu after every operation
+- [x] Validate all input with `TryParse` (menu choice, account number, amount)
+- [x] Convert the displayed account number (1, 2, 3...) to a 0-based index before calling `BankService`
+- [x] Call `BankService` for deposit, withdraw and transfer, and never call `AccountService` directly
+- [x] Ask for the PIN on withdraw and pass it as a string
+- [x] Show the result of every transaction to the user
+- [x] Save to the JSON file after every successful deposit, withdraw and transfer
+- [x] Log out and return to the login screen instead of closing the program
+- [x] No banking logic or balance checks in the UI
+
+DataHandling.cs
+- [x] `Load` reads the JSON file and returns a `List<User>`
+- [x] `Save` writes the `List<User>` to the JSON file
+- [x] The file path is defined in one place (`Data/accounts.json`)
+- [x] A missing file returns an empty list instead of crashing
+- [x] A broken or unreadable file is caught with `try/catch`
+- [x] Uses the existing `User` and `Account` classes, with no separate JSON classes
+- [x] The PIN is saved (`[JsonInclude]`) and the lock status is not (`[JsonIgnore]`)
+- [x] Data survives a restart: make a change, close the program, start it again and check that the balance is still there
+
 ## Reflektion
 Under vårt första möte ställdes frågan vad alla vara intresserad av att göra i projektet, sedan vilka roller som var av intresse. Jag, (Linus), blev snabbt vald som projektledare och Kristin var intresserad av User och Account delen, medan Martin var intresserad av bank logiken, samt William som var intresserad av UI. Efter det var satt, byggde vi upp en logik flow-chart för att få en visuell representation av programmet. Utifrån det fick jag, (Linus), i uppgift att planera och strukturera projektet, samt fördela arbetsuppgifter.
 
@@ -176,7 +204,9 @@ Utöver strukturen av projektet, hade vi ett avstämnings möte varje vecka där
 
 ### Hur Var Det att Arbeta i Gruppen & med Uppgifterna?
 **Linus**
+Jag tycker uppgiften har varit rolig att arbeta med, och känner att jag hamnade i en mottaglig grupp, trots ett avhopp. Uppgiften i sig tycker jag var passande för kursen och utmanande på olika sätt, inte bara som projektledare men även med programmering, eftersom man behöver strukturera, förklara hur man tänker och bygga något med andra, vilket har varit väldigt lärorikt.
 
+Som jag nämnde så känner jag att gruppen var mottaglig och det är väl ett mildare sätt att säga, att jag tycker vår grupp fungerade väldigt bra. Elefanten i rummet är väl att vi hade avhopp av en team medlem som inte tillförde något, men de resterande medlemarna var lätta att arbeta med, var mottagliga till feedback och även raka med att ge feedback tillbaka. De var öppna för förändringar, alternativ och dylikt. Detta gjorde arbetet som projektledare enklare men känner ändå att jag lärde mig mer än en sak som jag kan ta med mig som projektledare och programmerare.
 
 **Kristin**
 Det har varit en bra känsla i gruppen hela tiden. vi har kunnat fråga fritt utan att känna sig "dum" eller okunnig. bra feedback vid frågor eller funderingar. alla har getts chansen att fråga/komma till tals under gruppmöten.
@@ -191,8 +221,18 @@ På slutet körde vi även lite par kodningen vilket jag tyckte var väldigt lä
 kunde haft fler gruppmöten för att tillsammans diskutera kod och rubberducka mellan varandra för att lära oss än mer av varandra samt förstå upplägg av projektet och de olika delarna i det.
 
 ### Övervägda alternativ
+Jag, (Linus), svarar på denna fråga eftersom det var jag som strukturerade projektet och tog hand om den delen. När jag tänker efter hur och varför jag strukturerade projektet, känner jag inte att jag övervägde flera alternativ, utan det kändes rätt rakt fram i hur det skulle göras.
+
+Så de alternativ som kan ha kommit att övervägas var mer, "hur ska vi arbeta tillsammans", "Hur ska vi kunna hjälpa varandra", eftersom för det mesta följde alla medlemmar mina "TODO"-lists som jag gjorde åt dem.
 
 ### Kritisk Granskning av Kod och Förbättringar
+Kan tycka att detta är en rätt svår fråga, eftersom man utgår från sin egen förmåga och vet/kan man inte bättre så blir det svårt att få fram ett svar. Men det som jag hade velat granska är robustheten, tron är att koden är robust och vid tester har programmet inte gått att krascha, men det finns några förbättringar som kommer till åtanke.
+
+Vi använder "StringComparison.OrdinalIgnoreCase" i vår "locateUser" metod, vad den gör är att låta användaren logga in med stor eller liten bokstav, det gör att kontot: "Linus" kan loggas in som: "linus". En förbättring hade varit att köra utan och vara strika med användarens inloggnings namn.
+
+Ytterligare en förbättring hade varit att utveckla "ValidationHelper.cs" så den innehåller mer av verifikationen av pin-koden. Som den är uppsatt nu är den mer en bool, som skickar vidare för verifikation inne i User.cs, och fungerar då som en mellan man istället för en "motor" för verifikations processen.
+
+Utöver det hade UI generellt kunna förbättras, men pågrund av avhopp och en total ombyggnad för UI, fanns det inte tid över till ett mer detaljerat UI.
 
 ### Val av datastrukturer
 Vi valde att använda en Array, som innehåller kontonamn i ett fält. Tanken bakom det var att göra projketet så okompliserat som möjligt.
