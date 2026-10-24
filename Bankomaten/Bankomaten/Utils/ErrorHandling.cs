@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bankomaten.Utils
-{
+namespace Bankomaten.Utils {
     enum LoginResult
     {
         NoUser,
@@ -25,11 +24,9 @@ namespace Bankomaten.Utils
         SuccessfulTransaction
     }
 
-    internal static class ErrorHandling
-    {
+    internal static class ErrorHandling {
         // Keep login result messages here instead of in LoginMenu.
-        public static string GetLoginMessage(LoginResult result)
-        {
+        public static string GetLoginMessage(LoginResult result) {
             return result switch
             {
                 LoginResult.NoUser => "Användaren kunde inte hittas.",

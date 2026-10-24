@@ -3,47 +3,44 @@ using Bankomaten.Service;
 using Bankomaten.UI;
 using Bankomaten.Utils;
 
-namespace Bankomaten
-{
-    internal class Program
-    {
-        private static void Main(string[] args)
-        {
-            // Load saved users first; create the starter accounts if no saved data exists.
-            var dataHandling = new DataHandling();
-            List<User> users = dataHandling.Load();
+namespace Bankomaten {
+    internal class Program {
+        private static void Main(string[] args) {
+            DataHandling dataHandling = new DataHandling();
 
-            if (users.Count == 0)
-            {
-                users = CreateInitialUsers();
+            // loading in users from JSON and if JSON is empty, creates users
+            List<User> users = dataHandling.Load();
+            if (users.Count == 0) {
+                users = createInitialUsers();
                 dataHandling.Save(users);
             }
 
-            var validator = new ValidationHelper();
-            var bank = new BankService(users, validator, new AccountService());
-            var loginMenu = new LoginMenu();
-            var mainMenu = new MainMenu(bank, users, dataHandling);
+            // references to services
+            ValidationHelper validationHelper = new ValidationHelper();
+            AccountService accountService = new AccountService();
+            BankService bankService = new BankService(users, validationHelper, accountService);
 
-            // Return to the login menu after the user logs out.
-            while (true)
-            {
-                if (!loginMenu.ShowLoginMenu(bank))
+            LoginMenu loginMenu = new LoginMenu();
+            MainMenu mainMenu = new MainMenu(bankService, users, dataHandling);
+
+            // program loop (Login -> Main Menu -> back to login if logged out)
+            while (true) {
+                bool loggedIn = loginMenu.ShowLoginMenu(bankService);
+                if (!loggedIn) {
                     return;
+                }
                 Console.Clear();
-                mainMenu.ShowMenu();
+                mainMenu.showMenu();
             }
         }
-
-        private static List<User> CreateInitialUsers()
-        {
-            //Creates a list of users with their usernames, PINs, and accounts
-            return new List<User>
-            {
-                new User("Linus", 1111, Account.AccountFactory.GenerateAccounts()),
-                new User("Kristin", 2222, Account.AccountFactory.GenerateAccounts()),
-                new User("William", 3333, Account.AccountFactory.GenerateAccounts()),
-                new User("Martin", 4444, Account.AccountFactory.GenerateAccounts()),
-                new User("Anas", 5555, Account.AccountFactory.GenerateAccounts())
+        // method for creating the users
+        private static List<User> createInitialUsers() {
+            return new List<User> {
+                new User("Linus", 1111, Account.AccountFactory.generateAccounts()),
+                new User("Kristin", 2222, Account.AccountFactory.generateAccounts()),
+                new User("Martin", 3333, Account.AccountFactory.generateAccounts()),
+                new User("Anas", 4444, Account.AccountFactory.generateAccounts()),
+                new User("Osama", 5555, Account.AccountFactory.generateAccounts())
             };
         }
     }
