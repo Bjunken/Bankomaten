@@ -196,22 +196,22 @@ DataHandling.cs
 - [x] Data survives a restart: make a change, close the program, start it again and check that the balance is still there
 
 ## Reflektion
-Under vårt första möte ställdes frågan vad alla vara intresserad av att göra i projektet, sedan vilka roller som var av intresse. Jag, (Linus), blev snabbt vald som projektledare och Kristin var intresserad av User och Account delen, medan Martin var intresserad av bank logiken, samt William som var intresserad av UI. Efter det var satt, byggde vi upp en logik flow-chart för att få en visuell representation av programmet. Utifrån det fick jag, (Linus), i uppgift att planera och strukturera projektet, samt fördela arbetsuppgifter.
+Under vårt första möte ställdes frågan vad alla vara intresserad av att göra i projektet, sedan vilken roll som var av intresse. Jag, (Linus), blev vald som projektledare och Kristin var intresserad av User och Account delen, medan Martin var intresserad av Bank logiken, samt William som var intresserad av UI. Efter det var satt, byggde vi upp en logik flow-chart för att få en visuell representation av programmet. Utifrån det fick jag, (Linus), i uppgift att planera och strukturera projektet, samt fördela arbetsuppgifter.
 
-Planeringen av strukturen gick till så att, jag försökte hålla projektet så kompakt som möjligt, samt bygga upp det i byggstenar, där vi aldrig behövde röra varandras filer. I GitHub gjordes individuella branches som alla gick till en test branch, som vidare gick tillbaka till de individuella branches eller till vår main branch, vilket skulle leda till lättare ihop sättning, samt smidigare arbetsflöde eftersom vi inte behövde arbeta samtidigt och varje individ fick en veckas deadline. Tanken bakom det var att vi skulle ha så lite press som möjligt och mycket tid för att kunna ge stöd till varandra och bygga upp projektet i en bra takt.
+Planeringen av strukturen gick till på det viset att jag försökte hålla projektet så kompakt som möjligt, samt bygga upp det i byggstenar, där vi aldrig behövde röra varandras filer. I GitHub gjordes individuella branches som alla gick till en test branch, som vidare gick tillbaka till de individuella branches eller till vår main branch, vilket skulle leda till lättare ihopsättning, samt smidigare arbetsflöde eftersom vi inte behövde arbeta samtidigt och varje individ fick en veckas deadline. Tanken bakom det var att vi skulle ha minimal tidspress och mer tid för att kunna ge stöd till varandra och bygga upp projektet i en bra takt.
 
-Utöver strukturen av projektet, hade vi ett avstämnings möte varje vecka där individien vars deadline gick ut, fick redovisa sin kod för gruppen och sedan gick vi igenom vad som ska göras efter. Sedan hade vi även individuell avstämning med projekledaren varje torsdag, där man stämnde av vad man gjort eller planerat göra tills deadline dagen.
+Utöver strukturen av projektet, hade vi ett avstämningsmöte varje vecka där personen vars deadline gick ut, fick redovisa sin kod för gruppen och sedan gick vi igenom vad som ska göras efter. Sedan hade vi även individuell avstämning med projektledaren varje torsdag, där man stämde av vad man gjort eller planerat att göra till deadline dagen.
 
 ### Hur Var Det att Arbeta i Gruppen & med Uppgifterna?
 **Linus**
 Jag tycker uppgiften har varit rolig att arbeta med, och känner att jag hamnade i en mottaglig grupp, trots ett avhopp. Uppgiften i sig tycker jag var passande för kursen och utmanande på olika sätt, inte bara som projektledare men även med programmering, eftersom man behöver strukturera, förklara hur man tänker och bygga något med andra, vilket har varit väldigt lärorikt.
 
-Som jag nämnde så känner jag att gruppen var mottaglig och det är väl ett mildare sätt att säga, att jag tycker vår grupp fungerade väldigt bra. Elefanten i rummet är väl att vi hade avhopp av en team medlem som inte tillförde något, men de resterande medlemarna var lätta att arbeta med, var mottagliga till feedback och även raka med att ge feedback tillbaka. De var öppna för förändringar, alternativ och dylikt. Detta gjorde arbetet som projektledare enklare men känner ändå att jag lärde mig mer än en sak som jag kan ta med mig som projektledare och programmerare.
+Som jag nämnde känner jag att gruppen var mottaglig och det är väl ett mildare sätt att säga, att jag tycker vår grupp fungerade väldigt bra. Elefanten i rummet är väl att vi hade avhopp av en team medlem som inte tillförde något, men de resterande medlemarna var lätta att arbeta med, var mottagliga till feedback och även raka med att ge feedback tillbaka. De var öppna för förändringar, alternativ och dylikt. Detta gjorde arbetet som projektledare enklare men känner ändå att jag lärde mig mer än en sak som jag kan ta med mig som projektledare och programmerare.
 
 **Kristin**
-Det har varit en bra känsla i gruppen hela tiden. vi har kunnat fråga fritt utan att känna sig "dum" eller okunnig. bra feedback vid frågor eller funderingar. alla har getts chansen att fråga/komma till tals under gruppmöten.
-**förbättring:**
-kunde haft fler gruppmöten för att tillsammans diskutera kod och rubberducka mellan varandra för att lära oss än mer av varandra samt förstå upplägg av projektet och de olika delarna i det.
+Det har varit en bra känsla i gruppen hela tiden. Vi har kunnat fråga fritt utan att känna sig "dum" eller okunnig. Bra feedback vid frågor eller funderingar. Alla har getts chansen att fråga/komma till tals under gruppmöten. Bra feedback och diskussioner med Linus genom projektet för att få tips och förslag på hur man kan fortsätta när man kört fast. Det bästa var att vi alla redan från start visste vad vi ville göra vilket i sin tur skapade en bra grund utan diskussioner och gnäll utan vi kunde starta igång projektet direkt utifrån datastrukturen.
+**Förbättringsförslag framåt:**
+Kunde haft fler gruppmöten för att tillsammans diskutera kod och rubberducka mellan varandra för att lära oss än mer av varandra samt förstå upplägg av projektet och de olika delarna i det.
 
 **Martin**
 Stöttningen har varit bra, man har blivit bra bemött när man har bett om hjälp och gruppen har varit öppen för att hjälpa till. Även om man själv kanske har känt sig lite dum när man kört fast vid något tillfälle så har man fått stöttning och blivit peppad och påmind om att vi faktiskt fortfarande är nybörjare. Tycker det har varit bra upplägg där vi had Linus som blev projektledare som har kunnat stötta oss och vi andra har fått våra delar vi har haft ansvar över och end tydlig tidsplan. Varit bra med att både ha veckoavstämningar och individuella avsämningar med projektledaren.
@@ -228,14 +228,14 @@ Så de alternativ som kan ha kommit att övervägas var mer, "hur ska vi arbeta 
 ### Kritisk Granskning av Kod och Förbättringar
 Kan tycka att detta är en rätt svår fråga, eftersom man utgår från sin egen förmåga och vet/kan man inte bättre så blir det svårt att få fram ett svar. Men det som jag hade velat granska är robustheten, tron är att koden är robust och vid tester har programmet inte gått att krascha, men det finns några förbättringar som kommer till åtanke.
 
-Vi använder "StringComparison.OrdinalIgnoreCase" i vår "locateUser" metod, vad den gör är att låta användaren logga in med stor eller liten bokstav, det gör att kontot: "Linus" kan loggas in som: "linus". En förbättring hade varit att köra utan och vara strika med användarens inloggnings namn.
+Vi använder "StringComparison.OrdinalIgnoreCase" i vår "locateUser" metod, vad den gör är att låta användaren logga in med stor eller liten bokstav, det gör att kontot: "Linus" kan loggas in som: "linus". En förbättring hade varit att köra utan och vara strikta med användarens inloggnings namn.
 
 Ytterligare en förbättring hade varit att utveckla "ValidationHelper.cs" så den innehåller mer av verifikationen av pin-koden. Som den är uppsatt nu är den mer en bool, som skickar vidare för verifikation inne i User.cs, och fungerar då som en mellan man istället för en "motor" för verifikations processen.
 
 Utöver det hade UI generellt kunna förbättras, men pågrund av avhopp och en total ombyggnad för UI, fanns det inte tid över till ett mer detaljerat UI.
 
 ### Val av datastrukturer
-Vi valde att använda en Array, som innehåller kontonamn i ett fält. Tanken bakom det var att göra projketet så okompliserat som möjligt.
-Sedan valde vi att använda List för att hålla våra konton och saldon eftersom det underlättade inte bara skapandet men återanvändning av dem med uppackning av listorna.  
+Vi valde att använda en Array, som innehåller kontonamn i ett fält. Tanken bakom det var att göra projketet så okomplicerat som möjligt.
+Sedan valde vi att använda List för att hålla våra konton och saldon eftersom det underlättade inte bara skapandet utan även återanvändning av dem med uppackning av listorna.  
 ### Klassindelning
 Klasserna har delats in utöver arbetsuppgifterna och fördelning av projektet utifrån det som alla medlemmar var intresserade av att arbeta med, samt att försöka hålla projektet inom OOP-ramen som vi kunde.
